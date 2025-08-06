@@ -1,3 +1,4 @@
 from django.shortcuts import render
 
-# Create your views here.
+def announcement_list(request):
+    return render(request, 'announcement/announcement_list.html')
