@@ -3,9 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Announcement List</title>
-    <p> this is the chencha scool website</p>
+    <title>Announcement</title>
+    
 
-    {% block content %} {% endblock content %}
+    {% block content %}{% endblock content %}
 </head>
+<body>
+            <h1>Announcement List</h1>
+        {% if announcements %}
+            
+        <ul>
+            {% for announcement in announcements %}
+                <li>{{ announcement.title }}
+                    {% if announcement.image %}
+                        <img src="{{ announcement.image.url }}" alt="{{ announcement.title }}" height="400" width="500">
+                    {% endif %}
+                    
+                    <p>{{ announcement.content }}</p>
+            {% empty %}
+                <li>No announcements available.</li>
+                
+            {% endfor %}
+        </ul>
+        {% else %}
+            <p>No announcements available yet.</p>
+        {% endif %}
+
+</body>
 </html>

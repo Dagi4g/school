@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.urls import path, include
 from . import models
 
-admin.register(models.Announcement)
+admin.site.register(models.Announcement)
