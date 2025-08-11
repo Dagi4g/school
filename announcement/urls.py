@@ -3,8 +3,10 @@ from django.conf.urls.static import static
 from django.conf import settings
 from . import views
 
-app_name = 'announcement'
+app_name = 'chencha'
 
 urlpatterns = [
-    path("", views.announcement_list, name="announcement_list"),
+    path("", views.home, name="home"),
+    path("announcements/", views.announcement_list, name="announcement_list"),
+    path("about_us/", views.about_us, name="about_us"),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)   

@@ -36,6 +36,9 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     #my apps
     'announcement.apps.AnnouncementConfig',
+
+    #bootstrap app
+    'django_bootstrap5',
     #django apps
     'django.contrib.admin',
     'django.contrib.auth',

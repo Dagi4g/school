@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load django_bootstrap5 %}
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Chencha HighSchool</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    {% bootstrap_css %}
+    <style>
+        body {
+            background: linear-gradient(135deg, #fffbe7 0%, #fff9c4 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.7rem;
+            letter-spacing: 1px;
+        }
+        .hero-section {
+            background: url("{% static 'school_bg.jpg' %}") center/cover no-repeat;
+            min-height: 350px;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            margin-top: 30px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hero-content {
+            background: rgba(0, 51, 102, 0.7);
+            padding: 40px 30px;
+            border-radius: 10px;
+            color: #fff;
+            text-align: center;
+        }
+        .footer {
+            background: #222;
+            color: #bbb;
+            padding: 15px 0;
+            margin-top: auto;
+        }
+        @media (max-width: 768px) {
+            .hero-section {
+                min-height: 200px;
+            }
+            .hero-content {
+                padding: 20px 10px;
+            }
+        }
+    </style>
+    {% bootstrap_javascript %}
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+            <div class="container">
+                <a class="navbar-brand" href="">Chencha HighSchool</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'chencha:home' %}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'chencha:about_us' %}">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Contact</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'chencha:announcement_list' %}">Announcements</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main role="main" class="container flex-grow-1">
+        <div class="hero-section">
+            <div class="hero-content">
+                <h1 class="display-5 mb-3">Welcome to Chencha Highschool</h1>
+                <p class="lead mb-4">Empowering students in the south eastern region Chencha wereda with quality education and opportunities for a brighter future.</p>
+                <a href="{% url 'chencha:announcement_list' %}" class="btn btn-warning btn-lg shadow">View Announcements</a>
+            </div>
+        </div>
+        <div class="row text-center mb-5">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">Academic Excellence</h5>
+                        <p class="card-text">Our dedicated teachers and modern curriculum ensure top results for every student.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">Community Engagement</h5>
+                        <p class="card-text">We foster a strong sense of community and encourage student participation in local initiatives.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">Modern Facilities</h5>
+                        <p class="card-text">Our school features science labs, libraries, computer labs, and sports fields for holistic development.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% block content %}{% endblock content %}
+    </main>
+    <footer class="footer text-center">
+        <div class="container">
+            <span>&copy; {{ now|date:"Y" }} Chencha HighSchool, Arabminch Region Chencha wereda. All rights reserved.</span>
+        </div>
+    </footer>
+</body>
+</html>
