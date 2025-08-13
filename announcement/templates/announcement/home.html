@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="am">
 {% load django_bootstrap5 %}
 {% load static %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Chencha HighSchool</title>
+    <title>ጨንቻ ሁለትና ደረጃ ትምህርት ቤት</title>
     <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
     {% bootstrap_css %}
     <style>
@@ -59,23 +59,23 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="">Chencha HighSchool</a>
+                <a class="navbar-brand" href="">ጭንቻ ሁለትና ደረጃ ትምህርት ቤት</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" href="{% url 'chencha:home' %}">Home</a>
+                            <a class="nav-link active" href="{% url 'chencha:home' %}">ዋና ገጽ</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" href="{% url 'chencha:about_us' %}">About</a>
+                            <a class="nav-link active" href="{% url 'chencha:about_us' %}">ስለ እኛ</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Contact</a>
+                            <a class="nav-link" href="#">መገናኛ</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'chencha:announcement_list' %}">Announcements</a>
+                            <a class="nav-link" href="{% url 'chencha:announcement_list' %}">ወቅታዊ ማስታወቂያዎች</a>
                         </li>
                     </ul>
                 </div>
@@ -85,33 +85,33 @@
     <main role="main" class="container flex-grow-1">
         <div class="hero-section">
             <div class="hero-content">
-                <h1 class="display-5 mb-3">Welcome to Chencha Highschool</h1>
-                <p class="lead mb-4">Empowering students in the south eastern region Chencha wereda with quality education and opportunities for a brighter future.</p>
-                <a href="{% url 'chencha:announcement_list' %}" class="btn btn-warning btn-lg shadow">View Announcements</a>
+                <h1 class="display-5 mb-3">እንኮን በደህና መጡ </h1>
+                <p class="lead mb-4">በደቡብ ምስራቃዊ ክልል ጨንቻ ወረዳ ተማሪዎችን በጥራት ትምህርት እና ለወደፊት ብሩህ ዕድሎች ማብቃት።</p>
+                <a href="{% url 'chencha:announcement_list' %}" class="btn btn-warning btn-lg shadow">ማስታወቅያ ለማየት</a>
             </div>
         </div>
         <div class="row text-center mb-5">
             <div class="col-md-4 mb-4">
                 <div class="card h-100 shadow-sm border-0">
                     <div class="card-body">
-                        <h5 class="card-title text-primary">Academic Excellence</h5>
-                        <p class="card-text">Our dedicated teachers and modern curriculum ensure top results for every student.</p>
+                        <h5 class="card-title text-primary">በትምህርት የላቀ</h5>
+                        <p class="card-text">በሰለምጠኑ መምህራኖቻችን እና ዘመናዊ(አዲሱ) ስሪዓተ ትምህርት ተማሪዎቻችን የተሻለ ውጤት ለማስመዝገብ እንተጋለን።</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4 mb-4">
                 <div class="card h-100 shadow-sm border-0">
                     <div class="card-body">
-                        <h5 class="card-title text-primary">Community Engagement</h5>
-                        <p class="card-text">We foster a strong sense of community and encourage student participation in local initiatives.</p>
+                        <h5 class="card-title text-primary">ማህበረሰባዊ ተሳትፎ</h5>
+                        <p class="card-text">የኛ ተማሪዎች ማህበረሰብ አቀፍ ንቅናቀዎች፣ ኪልላዊና ሀገራዊ ውድድሮች ላይ ይሳተፋሉ።</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4 mb-4">
                 <div class="card h-100 shadow-sm border-0">
                     <div class="card-body">
-                        <h5 class="card-title text-primary">Modern Facilities</h5>
-                        <p class="card-text">Our school features science labs, libraries, computer labs, and sports fields for holistic development.</p>
+                        <h5 class="card-title text-primary">ዘመናዊ መሰረት ልማቶች</h5>
+                        <p class="card-text">በትምህርት ዘርፍ ዘመናዊ የሳይንስ ቤተሙከራወች(modern science laboratories)፣ ቤተ መጽሐፍት(libraries) ፣ የኮምፒውተር ቤተሙከራወች(computer labs) እና የስፖርት መሰልጠኛ ቦታዎች(playing fields) ይገኛሉ።</p>
                     </div>
                 </div>
             </div>
@@ -120,7 +120,7 @@
     </main>
     <footer class="footer text-center">
         <div class="container">
-            <span>&copy; {{ now|date:"Y" }} Chencha HighSchool, Arabminch Region Chencha wereda. All rights reserved.</span>
+            <span>&copy; {{ now|date:"Y" }} ጨንቻ ሁለትና ደረጃ ትምህርት ቤት. All rights reserved.</span>
         </div>
     </footer>
 </body>

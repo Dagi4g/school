@@ -6,7 +6,7 @@
     {% load django_bootstrap5 %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
-    <title>Announcements</title>
+    <title>ማስታወቂያዎች</title>
     <style>
         body {
             background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
@@ -66,12 +66,12 @@
 <body>
     <div class="container py-5">
         <div class="breadcrumb-custom mb-4 shadow-sm">
-            <a href="{% url 'chencha:home' %}">Home</a> /
-            <a href="{% url 'chencha:announcement_list' %}">Announcements</a>
+            <a href="{% url 'chencha:home' %}">ዋና ገጽ</a> /
+            <a href="{% url 'chencha:announcement_list' %}">ማስታወቂያዎች</a>
         </div>
         <div class="header-main text-center shadow">
-            <h1>Announcements</h1>
-            <p class="lead mt-3 mb-0" style="color:#cbd5e1;">Stay updated with the latest news and events</p>
+            <h1>ማስታወቂያዎች</h1>
+            <p class="lead mt-3 mb-0" style="color:#cbd5e1;">ወቅታዊ ዜናዎችን እና ክስተቶችን ይመልከቱ</p>
         </div>
         {% if announcements %}
             <div class="row g-4">
@@ -96,12 +96,12 @@
                 </div>
             {% empty %}
                 <div class="col-12">
-                    <div class="alert alert-warning text-center">No announcements available.</div>
+                    <div class="alert alert-warning text-center">ይቅርታ ማስታወቂያዎች የለም።</div>
                 </div>
             {% endfor %}
             </div>
         {% else %}
-            <div class="alert alert-info text-center">No announcements available yet.</div>
+            <div class="alert alert-info text-center">ይቅርታ ማስታወቂያዎች የለም።</div>
         {% endif %}
     </div>
 </body>
