@@ -77,7 +77,7 @@
             <div class="row g-4">
             {% for announcement in announcements %}
                 <div class="col-md-6 col-lg-4">
-                    <div class="card h-100 shadow-sm">
+                    <div class="card h-100 shadow-sm" onclick="toggleContent(this)" style="cursor: pointer;">
                         {% if announcement.image %}
                             <img src="{{ announcement.image.url }}" class="card-img-top announcement-img" alt="{{ announcement.title }}">
                         {% else %}
@@ -85,7 +85,10 @@
                         {% endif %}
                         <div class="card-body">
                             <h5 class="card-title">{{ announcement.title }}</h5>
-                            <p class="card-text">{{ announcement.content|truncatewords:30 }}</p>
+                            <div style="white-space: pre-wrap;">
+                            <p class="card-text short-content">{{ announcement.content|truncatewords:30 }} | </p>
+                            <p class="card-text full-content" style="display: none;">{{ announcement.content }}</p>
+                            </div>
                         </div>
                         <div class="card-footer bg-transparent border-0 text-end">
                             <small class="text-muted">
@@ -105,4 +108,20 @@
         {% endif %}
     </div>
 </body>
+<script>
+    function toggleContent(element) {
+        const fullContent = element.querySelector('.full-content');
+        const shortContent = element.querySelector('.short-content');
+        if (shortContent.style.display === 'none') {
+            shortContent.style.display = 'block';
+            fullContent.style.display = 'none';
+
+        } else {
+            shortContent.style.display = 'none';
+            fullContent.style.display = 'block';
+
+        }
+    }
+</script>
 </html>
+
