@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="am">
 <head>
     <meta charset="UTF-8">
-    <title>About Us - Chencha High School</title>
+    <title>ስለ ጨንቻ ሁለተኛ ደረጃ ትምህርት በት</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f7f7f7; }
+        body { font-family: 'sa', sans-serif; margin: 0; padding: 0; background: #f7f7f7; }
         .container { max-width: 800px; margin: 40px auto; background: #fff; padding: 32px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.07);}
         h1 { color: #2c3e50; }
         p { color: #444; line-height: 1.7; }
@@ -13,19 +13,19 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>About Chencha High School</h1>
+    <div class="container py-5">
+        <div class="breadcrumb-custom mb-4 shadow-sm">
+            <a href='{% url "chencha:home" %}'>ዋና ገጽ</a>/<a href="{% url "chencha:about_us" %}">ስለኛ</a>
+        </div>
+        <h1>ስለ ጨንቻ ሁለተኛ ትምህርት በት</h1>
         <p>
-            Chencha High School is a leading educational institution located in the heart of Chencha. Since our establishment, we have been committed to providing quality education, fostering academic excellence, and nurturing the talents of our students.
-        </p>
-        <p>
+            የጨንቻ ሁለተኛ ደረጃ ትምህርት ቤት በጨንቻ እምብርት የሚገኝ ግንባር ቀደም የትምህርት ተቋም ነው። ከተመሠረተበት ጊዜ ጀምሮ ጥራት ያለው ትምህርት ለመስጠት፣የአካዳሚክ ልህቀትን ለማሳደግ እና የተማሪዎቻችንን ተሰጥኦ ለማበልጽግ ቆርጠን ተነስተናል።        <p>
             Our dedicated teachers and staff work tirelessly to create a supportive and inclusive environment where every student can thrive. We offer a broad curriculum, modern facilities, and a variety of extracurricular activities to ensure the holistic development of our learners.
         </p>
         <p>
-            At Chencha High School, we believe in empowering the next generation with knowledge, skills, and values that prepare them for success in higher education and beyond.
-        </p>
+            በጨንቻ 2ኛ ደረጃ ት/ቤት ለቀጣዩ ትውልድ በእውቀት፣ ክህሎት እና እሴት በማብቃት ለከፍተኛ ትምህርት እና ከዝያም በላይ ስኬት የሚያዘጋጃቸው መሆኑን እናምናለን።        </p>
         <div class="footer">
-            &copy; {{ now|date:"Y" }} Chencha High School. All rights reserved.
+            &copy; {{ now|date:"Y" }} ጨንቻ 2ኛ ት/ቤት. All rights reserved.
         </div>
     </div>
 </body>

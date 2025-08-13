@@ -59,7 +59,7 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="">ጭንቻ ሁለትና ደረጃ ትምህርት ቤት</a>
+                <a class="navbar-brand" href="">ጨንቻ ሁለትኛ ደረጃ ትምህርት ቤት</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -83,11 +83,15 @@
         </nav>
     </header>
     <main role="main" class="container flex-grow-1">
-        <div class="hero-section">
-            <div class="hero-content">
-                <h1 class="display-5 mb-3">እንኮን በደህና መጡ </h1>
-                <p class="lead mb-4">በደቡብ ምስራቃዊ ክልል ጨንቻ ወረዳ ተማሪዎችን በጥራት ትምህርት እና ለወደፊት ብሩህ ዕድሎች ማብቃት።</p>
-                <a href="{% url 'chencha:announcement_list' %}" class="btn btn-warning btn-lg shadow">ማስታወቅያ ለማየት</a>
+        <div class="hero-section position-relative overflow-hidden" style="min-height: 400px;">
+            <img src="{% static 'announcement/IMG_20250813_185042_423.jpg' %}" 
+             alt="Logo" 
+             class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover opacity-12050"
+             style="z-index: 1; filter: blur(5px) brightness(13px);">
+            <div class="hero-content position-relative" style="z-index: 2; background: rgba(0, 51, 102, 0.75); box-shadow: 0 8px 32px rgba(0,0,0,0.15);">
+            <h1 class="display-4 fw-bold mb-3" style="letter-spacing: 2px;">እንኳን በደህና መጡ</h1>
+            <p class="lead mb-4 fs-5">በደቡብ ኢትዮጵያ ጨንቻ ወረዳ ተማሪዎችን ጥራት ባለው ትምህርት እና ለወደፊት ብሩህ ዕድሎች ማብቃት።</p>
+            <a href="{% url 'chencha:announcement_list' %}" class="btn btn-warning btn-lg px-5 shadow-lg rounded-pill">ማስታወቅያ ለማየት</a>
             </div>
         </div>
         <div class="row text-center mb-5">
