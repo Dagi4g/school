@@ -1,26 +1,51 @@
 <!DOCTYPE html>
 <html lang="am">
 <head>
+    {% load django_bootstrap5 %}
+    {% load static %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
     <meta charset="UTF-8">
     <title>ስለ ጨንቻ ሁለተኛ ደረጃ ትምህርት በት</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        body { font-family: 'sa', sans-serif; margin: 0; padding: 0; background: #f7f7f7; }
+        body { 
+            font-family: 'sa', sans-serif; 
+            margin: 0; padding: 0; 
+            background: #f7f7f7; 
+            color: #333;}
         .container { max-width: 800px; margin: 40px auto; background: #fff; padding: 32px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.07);}
         h1 { color: #2c3e50; }
         p { color: #444; line-height: 1.7; }
         .footer { margin-top: 40px; text-align: center; color: #888; font-size: 0.95em; }
+
+        .breadcrumb-custom a {
+            color: #f8fafc;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .breadcrumb-custom {
+            background: #1d3145;
+            border-radius: .5rem;
+            padding: .75rem 1.25rem;
+            margin-bottom: 2rem;
+        }
+        .breadcrumb-custom a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <div class="container py-5">
         <div class="breadcrumb-custom mb-4 shadow-sm">
-            <a href='{% url "chencha:home" %}'>ዋና ገጽ</a>/<a href="{% url "chencha:about_us" %}">ስለኛ</a>
+            <a href='{% url "chencha:home" %}'>ዋና ገጽ</a>/
+            <a href='{% url "chencha:about_us"%}'>ስለኛ</a>
         </div>
         <h1>ስለ ጨንቻ ሁለተኛ ትምህርት በት</h1>
         <p>
-            የጨንቻ ሁለተኛ ደረጃ ትምህርት ቤት በጨንቻ እምብርት የሚገኝ ግንባር ቀደም የትምህርት ተቋም ነው። ከተመሠረተበት ጊዜ ጀምሮ ጥራት ያለው ትምህርት ለመስጠት፣የአካዳሚክ ልህቀትን ለማሳደግ እና የተማሪዎቻችንን ተሰጥኦ ለማበልጽግ ቆርጠን ተነስተናል።        <p>
-            Our dedicated teachers and staff work tirelessly to create a supportive and inclusive environment where every student can thrive. We offer a broad curriculum, modern facilities, and a variety of extracurricular activities to ensure the holistic development of our learners.
+            የጨንቻ ሁለተኛ ደረጃ ትምህርት ቤት በጨንቻ እምብርት የሚገኝ ግንባር ቀደም የትምህርት ተቋም ነው። ከተመሠረተበት ጊዜ ጀምሮ ጥራት ያለው ትምህርት ለመስጠት፣የአካዳሚክ ልህቀትን ለማሳደግ እና የተማሪዎቻችንን ተሰጥኦ ለማበልጽግ ቆርጠን ተነስተናል።        </p>
+        <p>
+            ቁርጠኛ መምህራኖቻችን እና ሰራተኞቻችን እያንዳንዱ ተማሪ የሚያድግበት ደጋፊ እና ሁሉን አቀፍ አካባቢ ለመፍጠር ያለመታከት ይሰራሉ። የተማሪዎቻችንን ሁለንተናዊ እድገት ለማረጋገጥ ሰፊ ሥርዓተ ትምህርት፣ ዘመናዊ መገልገያዎችን እና የተለያዩ ከመደበኛ ትምህርት ውጭ እንቅስቃሴዎች ውስጥ እንድሳተፉ እናደርጋለን።
         </p>
         <p>
             በጨንቻ 2ኛ ደረጃ ት/ቤት ለቀጣዩ ትውልድ በእውቀት፣ ክህሎት እና እሴት በማብቃት ለከፍተኛ ትምህርት እና ከዝያም በላይ ስኬት የሚያዘጋጃቸው መሆኑን እናምናለን።        </p>
