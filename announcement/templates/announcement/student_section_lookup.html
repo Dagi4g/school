@@ -1,0 +1,116 @@
+{% load django_bootstrap5 %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ክፍል ፈልግ</title>
+    {% bootstrap_css %}
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <style>
+        body {
+            background: linear-gradient(135deg, #fffbe7 0%, #fff9c4 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .hero-section {
+            background: center/cover no-repeat;
+            min-height: 300px;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            margin-top: 30px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hero-content {
+            background: rgba(0, 51, 102, 0.7);
+            padding: 30px 20px;
+            border-radius: 10px;
+            color: #fff;
+            text-align: center;
+        }
+        .form-container {
+            max-width: 500px;
+            margin: 0 auto 50px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+        .btn-submit {
+            background-color: #ffc107;
+            border: none;
+            color: #000;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 50px;
+        }
+        .result {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+    {% bootstrap_javascript %}
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+            <div class="container">
+                <a class="navbar-brand" href="{% url 'chencha:home' %}">ጨንቻ ሁለትኛ ደረጃ ትምህርት ቤት</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" href="{% url 'chencha:home' %}">ዋና ገጽ</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'chencha:about_us' %}">ስለ እኛ</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'chencha:announcement_list' %}">ወቅታዊ ማስታወቂያዎች</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="{% url 'chencha:student_section_lookup' %}">ክፍልህን ፈልግ</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main" class="container flex-grow-1">
+        <div class="hero-section">
+            <div class="hero-content">
+                <h1 class="display-5 fw-bold mb-3">ክፍል ፈልግ</h1>
+                <p class="lead">የተማሪ ሙሉ ስምና የክፍል ደረጃ በመስጠት ክፍሉን ያግኙ።</p>
+            </div>
+        </div>
+
+        <div class="form-container">
+            <form method="post">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                <div class="text-center mt-3">
+                    <button type="submit" class="btn-submit btn btn-lg shadow-lg">ፈልግ</button>
+                </div>
+            </form>
+
+            {% if section %}
+                <div class="result alert alert-success mt-4">
+                    <h4>የተማሪ ክፍል</h4>
+                    <p>{{ form.cleaned_data.first_name }} {{ form.cleaned_data.last_name }} (Grade: {{ form.cleaned_data.grade }}) : <strong>{{ section }}</strong></p>
+                </div>
+            {% elif not_found %}
+                <div class="result alert alert-danger mt-4">
+                    <h4>የተማሪ ክፍል አልተገኘም</h4>
+                    <p>በተሰጠው ዝርዝር የተማሪ መረጃ ላይ ምንም የተገኘ መረጃ የለም።</p>
+                </div>
+            {% endif %}
+        </div>
+    </main>
+
+    <footer class="footer text-center bg-dark text-light py-3 mt-auto">
+        <div class="container">
+            <span>&copy; {{ now|date:"Y" }} ጨንቻ ሁለትኛ ደረጃ ትምህርት ቤት. All rights reserved.</span>
+        </div>
+    </footer>
+</body>
+</html>

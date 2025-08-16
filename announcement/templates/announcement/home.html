@@ -21,7 +21,7 @@
             letter-spacing: 1px;
         }
         .hero-section {
-            background: url("{% static 'school_bg.jpg' %}") center/cover no-repeat;
+            background: center/cover no-repeat;
             min-height: 350px;
             border-radius: 12px;
             box-shadow: 0 4px 24px rgba(0,0,0,0.08);
@@ -76,6 +76,10 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'chencha:announcement_list' %}">ወቅታዊ ማስታወቂያዎች</a>
+
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'chencha:student_section_lookup' %}">ክፍልህን ፈልግ</a>
                         </li>
                     </ul>
                 </div>
