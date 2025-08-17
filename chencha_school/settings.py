@@ -34,7 +34,7 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     #my apps
-    'announcement.apps.AnnouncementConfig',
+    "announcement",
 
     #bootstrap app
     'django_bootstrap5',

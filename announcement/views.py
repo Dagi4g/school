@@ -2,6 +2,8 @@ from django.shortcuts import render
 from .models import Announcement, Student
 from .forms import SectionLookupForm
 
+
+
 def home(request):
     return render(request, 'announcement/home.html')
 
