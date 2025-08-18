@@ -92,14 +92,26 @@ class Student(models.Model):
     father_name = models.CharField(max_length=100,db_index=True)
     grand_father_name = models.CharField(max_length=100,db_index=True)
     birth_date = models.DateField(default=timezone.now()-timedelta(days=12*365))
+    sex = models.CharField(max_length=10, choices=[('M', 'Male'), ('F', 'Female')], default='M')
     age = models.IntegerField(default=15)
-    kebele = models.CharField(max_length=100, db_index=True)
+    residential_area_choice = [("በወረዳው ዊስጥ ሆኖ ከለላ ቀበሌ", "በወረዳው ዊስጥ ሆኖ ከለላ ቀበሌ"),('በዞን ዊስጥ ሆኖ ከለላ ወረዳ', 'በዞን ዊስጥ ሆኖ ከለላ ወረዳ'),('በክልል ዊስጥ ሆኖ ከለላ ዞን', 'በክልል ዊስጥ ሆኖ ከለላ ዞን'),('በአገር ዊስጥ ሆኖ ከለላ ክልል', 'በአገር ዊስጥ ሆኖ ከለላ ክልል')]
+    residential_area = models.CharField(max_length=100, db_index=True, null=True, blank=True, choices=residential_area_choice)
     past_school_name = models.CharField(max_length=100, db_index=True, null=True, blank=True)
     section = models.ForeignKey(Section, on_delete=models.CASCADE)
     grade = models.ForeignKey(Grade, on_delete=models.CASCADE)
+    stream_choice = [('natural science', 'Natural Science'), ('social science', 'Social Science'), ('General', 'General')]
+    stream = models.CharField(max_length=100, db_index=True, choices=stream_choice)
+
+    def save(self, *args, **kwargs):
+        if not self.stream and (self.grade == 'grade 9' or self.grade == 'grade 10'):
+            self.stream = "General"
+            
+        else :
+            
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.student_name} {self.father_name} {self.grand_father_name} (Birth Date: {self.birth_date}, Age: {self.age}, Kebele: {self.kebele}, Past School: {self.past_school_name})"
+        return f"{self.student_name} {self.father_name} {self.grand_father_name} (Birth Date: {self.birth_date}, Age: {self.age}, Residential Area: {self.residential_area}, Past School: {self.past_school_name})"
 
     def __repr__(self):
         return super().__repr__()

@@ -44,3 +44,4 @@ def student_section_lookup(request):
         'section': section,
         'not_found': not_found
     })
+
