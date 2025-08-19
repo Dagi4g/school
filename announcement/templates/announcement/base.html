@@ -1,16 +1,21 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="am">
+<html lang="am">    
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% load django_bootstrap5 %}
-
-    <title>ጨንቻ ሁለተኛ ደረጃ ትምህርት በት</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    {% load django_bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <title>ጨንቻ ሁለተኛ ደረጃ ትምህርት ቤት</title>
+    <link rel="stylesheet" href="{% static 'announcement/css/home.css' %}">
+    <link rel="stylesheet" href="{% static 'announcement/css/announcement.css' %}">
+    <script src="{% static 'announcement/javascript/annnouncement.js' %}"></script>
+    <link rel="icon" type="image/x-icon" href="{% static 'announcement/IMG_20250813_185042_423.jpg' %}">
 
 </head>
 <body>
     {% block content %}{% endblock content %}
 </body>
-
+</html>
