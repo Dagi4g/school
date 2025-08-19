@@ -1,5 +1,6 @@
 
 body {
+    font-family: 'sa', sans-serif;
     background: linear-gradient(135deg, #fffbe7 0%, #fff9c4 100%);
     min-height: 100vh;
     display: flex;
