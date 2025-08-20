@@ -1,0 +1,34 @@
+{% extends "announcement/base.html" %}
+{% load static %}
+{% block content %}
+    <div class="container py-5">
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm" onclick="toggleContent(this)" style="cursor: pointer;">
+                        {% if announcement.image %}
+                            <img src="{{ announcement.image.url }}" class="card-img-top announcement-img" alt="{{ announcement.title }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ announcement.title }}</h5>
+                            <div style="white-space: pre-wrap;">
+                            <p class="card-text short-content">{{ announcement.content|truncatewords:30 }} | </p>
+                            <p class="card-text full-content" style="display: none;">{{ announcement.content }}</p>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 text-end">
+                            <small class="text-muted">
+                                Posted on {{ announcement.created_at|date:"M d, Y" }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    
+    <footer class="text-center py-4">
+        <div class="container">
+            <span class="text-muted">&copy; {{ now|date:"Y" }} ጨንቻ ሁለትና ደረጃ ትምህርት ቤት. All rights reserved.</span>
+        </div>
+    </footer>
+</body>
+{% endblock %}

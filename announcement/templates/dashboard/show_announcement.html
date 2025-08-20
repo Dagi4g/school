@@ -1,0 +1,46 @@
+{% extends "announcement/base.html" %}
+{% load static %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+    <div class="container py-5">
+        <div class="row g-4">
+            <div class="card-body" align="center">
+                <a href="{% url 'chencha:create_announcement' %}" class="btn btn-primary">ማስታወቂያ ለመጻፍ</a>
+            </div>
+            {% for announcement in announcements %}
+                <div class="col-md-6 col-lg-4">
+
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+
+                            <a href="{% url 'chencha:announcement_detail' pk=announcement.id %}">
+                                {{ announcement.title }}
+                            </a>
+                            <a href="{% url 'chencha:update_announcement' pk=announcement.id %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                            <a href="{% url 'chencha:delete_announcement' pk=announcement.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+
+                        </div>
+                        
+                        <div class="card-footer bg-transparent border-0 text-end">
+                            <small class="text-muted">
+                                Posted on {{ announcement.created_at|date:"M d, Y" }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <div class="alert alert-warning text-center">ይቅርታ ማስታወቂያዎች የለም።</div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <footer class="text-center py-4">
+        <div class="container">
+            <span class="text-muted">&copy; {{ now|date:"Y" }} ጨንቻ ሁለትና ደረጃ ትምህርት ቤት. All rights reserved.</span>
+        </div>
+    </footer>
+</body>
+{% endblock %}

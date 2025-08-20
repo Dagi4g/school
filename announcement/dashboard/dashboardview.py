@@ -1,9 +1,12 @@
-from django.views.generic import CreateView,ListView,DeleteView,UpdateView
+from django.views.generic import CreateView,ListView,DeleteView,UpdateView,DetailView,TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from ..forms import AnnouncementManagementForm
 from ..models import Announcement
 
+class DashBoard(LoginRequiredMixin, TemplateView):
+    model = Announcement
+    template_name = 'dashboard/home.html'
 
 class AnnouncementCreateView(LoginRequiredMixin, CreateView):
     model = Announcement
@@ -11,19 +14,24 @@ class AnnouncementCreateView(LoginRequiredMixin, CreateView):
     template_name = 'dashboard/create_announcement.html'
     success_url = '/announcements/'
 
-class AnnouncementListView(ListView):
+class AnnouncementListView(LoginRequiredMixin, ListView):
     model = Announcement
-    template_name = 'announcement/dashboard/announcement_list.html'
+    template_name = 'dashboard/show_announcement.html'
     context_object_name = 'announcements'
 
+class AnnouncementDetailView(LoginRequiredMixin, DetailView):
+    model = Announcement
+    template_name = 'dashboard/announcement_detail.html'
+    context_object_name = 'announcement'
 
-class AnnouncementUpdateView(UpdateView):
+
+class AnnouncementUpdateView(LoginRequiredMixin, UpdateView):
     model = Announcement
     form_class = AnnouncementManagementForm
-    template_name = 'announcement/dashboard/announcement_form.html'
+    template_name = 'dashboard/update_announcement.html'
     success_url = '/announcements/'
 
-class AnnouncementDeleteView(DeleteView):
+class AnnouncementDeleteView(LoginRequiredMixin, DeleteView):
     model = Announcement
-    template_name = 'announcement/dashboard/announcement_confirm_delete.html'
+    template_name = 'dashboard/confirm_announcement_deletion.html'
     success_url = '/announcements/'

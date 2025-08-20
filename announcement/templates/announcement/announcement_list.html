@@ -1,56 +1,52 @@
 {% extends "announcement/base.html" %}
 {% block content %}
-<body>
-    <div class="container py-5">
-        <div class="breadcrumb-custom mb-4 shadow-sm">
-            <a href="{% url 'chencha:home' %}">ዋና ገጽ</a> /
-            <a href="{% url 'chencha:announcement_list' %}">ማስታወቂያዎች</a>
-        </div>
-        <div class="header-main text-center shadow">
-            <h1>ማስታወቂያዎች</h1>
-            <p class="lead mt-3 mb-0" style="color:#cbd5e1;">ወቅታዊ ዜናዎችን እና ክስተቶችን ይመልከቱ</p>
-        </div>
-        {% if announcements %}
-            <div class="row g-4">
-            {% for announcement in announcements %}
-                <div class="col-md-6 col-lg-4">
-                    <div class="card h-100 shadow-sm" onclick="toggleContent(this)" style="cursor: pointer;">
-                        {% if announcement.image %}
-                            <img src="{{ announcement.image.url }}" class="card-img-top announcement-img" alt="{{ announcement.title }}">
-                        {% else %}
-                            <img src="https://source.unsplash.com/400x220/?school,education" class="card-img-top announcement-img" alt="Announcement">
-                        {% endif %}
-                        <div class="card-body">
-                            <h5 class="card-title">{{ announcement.title }}</h5>
-                            <div style="white-space: pre-wrap;">
-                            <p class="card-text short-content">{{ announcement.content|truncatewords:30 }} | </p>
-                            <p class="card-text full-content" style="display: none;">{{ announcement.content }}</p>
-                            </div>
-                        </div>
-                        <div class="card-footer bg-transparent border-0 text-end">
-                            <small class="text-muted">
-                                Posted on {{ announcement.created_at|date:"M d, Y" }}
-                            </small>
+
+<div class="container py-5">
+    <div class="breadcrumb-custom mb-4 shadow-sm">
+        <a href="{% url 'chencha:home' %}">ዋና ገጽ</a> /
+        <a href="{% url 'chencha:announcement_list' %}">ማስታወቂያዎች</a>
+    </div>
+    <div class="header-main text-center shadow">
+        <h1>ማስታወቂያዎች</h1>
+        <p class="lead mt-3 mb-0" style="color:#cbd5e1;">ወቅታዊ ዜናዎችን እና ክስተቶችን ይመልከቱ</p>
+    </div>
+        <div class="row g-4">
+        {% for announcement in announcements %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card-body" align="center">
+                    <h2 class="card-title">{{ announcement.title }}</h2>
+                </div>
+                <div class="card h-100 shadow-sm" onclick="toggleContent(this)" style="cursor: pointer;">
+                    {% if announcement.image %}
+                        <img src="{{ announcement.image.url }}" class="card-img-top announcement-img" alt="{{ announcement.title }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ announcement.title }}</h5>
+                        <div style="white-space: pre-wrap;">
+                        <p class="card-text short-content">{{ announcement.content|truncatewords:30 }} | </p>
+                        <p class="card-text full-content" style="display: none;">{{ announcement.content }}</p>
                         </div>
                     </div>
+                    <div class="card-footer bg-transparent border-0 text-end">
+                        <small class="text-muted">
+                            Posted on {{ announcement.created_at|date:"M d, Y" }}
+                        </small>
+                    </div>
                 </div>
-            {% empty %}
-                <div class="col-12">
-                    <div class="alert alert-warning text-center">ይቅርታ ማስታወቂያዎች የለም።</div>
-                </div>
-            {% endfor %}
             </div>
-        {% else %}
-            <div class="alert alert-info text-center">ይቅርታ ማስታወቂያዎች የለም።</div>
-        {% endif %}
-    </div>
-    <footer class="text-center py-4">
-        <div class="container">
-            <span class="text-muted">&copy; {{ now|date:"Y" }} ጨንቻ ሁለትና ደረጃ ትምህርት ቤት. All rights reserved.</span>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-warning text-center">ይቅርታ ማስታወቂያዎች የለም።</div>
+            </div>
+        {% endfor %}
         </div>
-    </footer>
-</body>
+</div>
+<footer class="text-center py-4">
+    <div class="container">
+        <span class="text-muted">&copy; {{ now|date:"Y" }} ጨንቻ ሁለትና ደረጃ ትምህርት ቤት. All rights reserved.</span>
+    </div>
+</footer>
+
 {% endblock content %}
 
-</html>
 

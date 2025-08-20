@@ -1,0 +1,13 @@
+{% extends "announcement/base.html" %}
+{% load static %}
+{% block content %}
+  <h1>Welcome to the Dashboard</h1>
+  <p>This is your dashboard where you can manage your announcements.</p>
+    <div class="container py-5">
+        <div class="row g-4">
+          <div class="header-main text-center shadow" >
+            <a href="{% url 'chencha:show_announcement' %}" style="color: white;">announcements</a>
+          </div>
+        </div>
+      </div>
+{% endblock %}
