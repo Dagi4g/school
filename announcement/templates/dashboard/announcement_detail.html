@@ -3,6 +3,9 @@
 {% block content %}
     <div class="container py-5">
             <div class="row g-4">
+            <div class="header-main text-center shadow">
+                <a href="{% url 'chencha:dashboard' %}" class="text-white">ዳሽቦርድ</a> /
+                <a href="{% url 'chencha:show_announcement' %}" class="text-white">ማስታወቂያዎች</a><a href="{% url 'chencha:announcement_detail' %}">ስሰፋ</a>
                 <div class="col-md-6 col-lg-4">
                     <div class="card h-100 shadow-sm" onclick="toggleContent(this)" style="cursor: pointer;">
                         {% if announcement.image %}

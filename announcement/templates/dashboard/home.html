@@ -1,13 +1,47 @@
 {% extends "announcement/base.html" %}
 {% load static %}
+
 {% block content %}
-  <h1>Welcome to the Dashboard</h1>
-  <p>This is your dashboard where you can manage your announcements.</p>
-    <div class="container py-5">
-        <div class="row g-4">
-          <div class="header-main text-center shadow" >
-            <a href="{% url 'chencha:show_announcement' %}" style="color: white;">announcements</a>
+<div class="container py-5">
+
+  <!-- Page Header -->
+  <div class="text-center mb-5">
+    <h1 class="fw-bold display-5 text-primary">ዳሽቦርድ</h1>
+    <p class="lead text-muted">ይህ ዳሽቦርድ በወብሳይት ላይ መረጃዎችን ለመጫልን ይገለግላል።</p>
+  </div>
+
+  <!-- Dashboard Cards -->
+  <div class="row g-4 justify-content-center">
+
+    <!-- Announcement Card -->
+    <div class="col-md-4">
+      <a href="{% url 'chencha:show_announcement' %}" class="text-decoration-none">
+        <div class="card shadow-lg border-0 rounded-4 h-100 text-center dashboard-card">
+          <div class="card-body p-4">
+            <div class="mb-3">
+              <i class="bi bi-megaphone-fill fs-1 text-primary"></i>
+            </div>
+            <h5 class="fw-bold text-dark">ማስታወቂያዎች</h5>
+            <p class="text-muted small">ከት/ቤቱ ጋር የተያያዙ ዋና ማስታወቂያዎችን ይመልከቱ።</p>
           </div>
         </div>
-      </div>
+      </a>
+    </div>
+
+    <!-- Add more cards here if needed -->
+    <!-- Example: Students, Teachers, Settings, etc. -->
+
+  </div>
+</div>
+
+<!-- Custom CSS -->
+<style>
+  .dashboard-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .dashboard-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+</style>
 {% endblock %}

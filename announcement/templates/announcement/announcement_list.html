@@ -1,4 +1,5 @@
 {% extends "announcement/base.html" %}
+{% load to_ethiopian_calander %}
 {% block content %}
 
 <div class="container py-5">
@@ -29,24 +30,18 @@
                     </div>
                     <div class="card-footer bg-transparent border-0 text-end">
                         <small class="text-muted">
-                            Posted on {{ announcement.created_at|date:"M d, Y" }}
+                            በ {{ announcement.created_at |to_ethiopian }} የተለጠፈ
                         </small>
                     </div>
                 </div>
             </div>
         {% empty %}
-            <div class="col-12">
+            <div class="col-0">
                 <div class="alert alert-warning text-center">ይቅርታ ማስታወቂያዎች የለም።</div>
             </div>
         {% endfor %}
         </div>
 </div>
-<footer class="text-center py-4">
-    <div class="container">
-        <span class="text-muted">&copy; {{ now|date:"Y" }} ጨንቻ ሁለትና ደረጃ ትምህርት ቤት. All rights reserved.</span>
-    </div>
-</footer>
-
 {% endblock content %}
 
 

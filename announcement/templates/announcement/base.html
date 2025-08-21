@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load to_ethiopian_calander %}
     {% load static %}
     {% load django_bootstrap5 %}
     {% bootstrap_css %}
@@ -17,5 +18,10 @@
 </head>
 <body>
     {% block content %}{% endblock content %}
+    <footer class="footer text-center bg-dark text-white py-3 mt-5">
+        <div class="container">
+            <span >&copy; {{ now|date:"Y" }} ጨንቻ ሁለትና ደረጃ ትምህርት ቤት. All rights reserved.</span>
+    </div>
+</footer>
 </body>
 </html>

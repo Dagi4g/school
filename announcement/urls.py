@@ -8,7 +8,8 @@ app_name = 'chencha'
 
 urlpatterns = [
     path("", views.home, name="home"),
-    path("announcements/", views.announcement_list, name="announcement_list"),
+    
+    path("announcements/", views.AnnouncementListView.as_view(), name="announcement_list"),
     path("about_us/", views.about_us, name="about_us"),
     # the school dashboard.
     path ("dashboard/", dashboardview.DashBoard.as_view(), name="dashboard"),
