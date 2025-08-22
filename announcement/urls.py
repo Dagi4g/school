@@ -17,5 +17,6 @@ urlpatterns = [
     path("show_announcement/", dashboardview.AnnouncementListView.as_view(), name="show_announcement"),
     path("update_announcement/<int:pk>/", dashboardview.AnnouncementUpdateView.as_view(), name="update_announcement"),
     path("announcement_detail/<int:pk>/", dashboardview.AnnouncementDetailView.as_view(), name="announcement_detail"),
-    path("delete_announcement/<int:pk>/", dashboardview.AnnouncementDeleteView.as_view(), name="delete_announcement")
+    path("delete_announcement/<int:pk>/", dashboardview.AnnouncementDeleteView.as_view(), name="delete_announcement"),
+    path("students/", dashboardview.StudentListView.as_view(), name="student_list")
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)   

@@ -17,7 +17,7 @@ class Announcement(models.Model):
     def __repr__(self):
         return super().__repr__()
 
-class ParentForm(models.Model):
+class Parent(models.Model):
     name = models.CharField(max_length=255)
     father_name = models.CharField(max_length=255)
     relation_ship_choice = [('አባት', 'አባት'), ('እናት', 'እናት'), ('አሳዳጊ', 'አሳዳጊ'), ('ሌላ', 'ሌላ')]
@@ -73,7 +73,7 @@ class Student(models.Model):
     birth_date = models.DateField(default=timezone.now()-timedelta(days=365*15))
     age = models.PositiveIntegerField()
     sex = models.CharField(max_length=10, choices=[('male', 'Male'), ('female', 'Female')])
-    parent = models.ForeignKey(ParentForm, on_delete=models.CASCADE)
+    parent = models.ForeignKey(Parent, on_delete=models.CASCADE)
     email = models.EmailField(null=True, blank=True)
     phone = models.CharField(max_length=20, null=True, blank=True)
     section = models.ForeignKey(Section, on_delete=models.CASCADE)

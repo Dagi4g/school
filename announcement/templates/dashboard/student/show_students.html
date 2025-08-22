@@ -1,0 +1,63 @@
+{% extends "announcement/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container my-4">
+    <h2 class="text-center mb-4">📚 Student List</h2>
+
+    <div class="table-responsive shadow rounded">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Father's Name</th>
+                    <th>Grandfather's Name</th>
+                    <th>Birth Date</th>
+                    <th>Age</th>
+                    <th>Sex</th>
+                    <th>Parents</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Grade</th>
+                    <th>Section</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                    <tr>
+                        <td>{{ student.student_name }}</td>
+                        <td>{{ student.father_name }}</td>
+                        <td>{{ student.grand_father_name }}</td>
+                        <td>{{ student.birth_date }}</td>
+                        <td>{{ student.age }}</td>
+                        <td>
+                            {% if student.sex == "male" %}
+                                <span class="badge bg-primary">Male</span>
+                            {% elif student.sex == "female" %}
+                                <span class="badge bg-pink">Female</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Other</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% for parent in student.parents %}
+                                <span class="badge bg-info text-dark">{{ parent.name }} ({{ parent.relationship }})</span><br>
+                            {% empty %}
+                                <span class="text-muted">No parent info</span>
+                            {% endfor %}
+                        </td>
+                        <td>{{ student.email }}</td>
+                        <td>{{ student.phone }}</td>
+                        <td>{{ student.section.grade.name }}</td>
+                        <td>{{ student.section.name }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="10" class="text-center text-muted">No students found</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

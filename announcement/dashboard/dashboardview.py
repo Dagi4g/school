@@ -2,11 +2,14 @@ from django.views.generic import CreateView,ListView,DeleteView,UpdateView,Detai
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from ..forms import AnnouncementManagementForm
-from ..models import Announcement
+from ..models import (Announcement,Student,Parent,AcademicYear,Grade,Section)
 
 class DashBoard(LoginRequiredMixin, TemplateView):
     model = Announcement
     template_name = 'dashboard/home.html'
+    
+
+'''announcement management view'''
 
 class AnnouncementCreateView(LoginRequiredMixin, CreateView):
     model = Announcement
@@ -35,3 +38,10 @@ class AnnouncementDeleteView(LoginRequiredMixin, DeleteView):
     model = Announcement
     template_name = 'dashboard/confirm_announcement_deletion.html'
     success_url = '/show_announcement/'
+
+'''student management view'''
+
+class StudentListView(LoginRequiredMixin, ListView):
+    model = Student
+    template_name = 'dashboard/student/show_students.html'
+    context_object_name = 'students'
