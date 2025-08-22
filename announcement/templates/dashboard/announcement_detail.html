@@ -1,11 +1,15 @@
 {% extends "announcement/base.html" %}
 {% load static %}
+{% load to_ethiopian_calander %}
 {% block content %}
     <div class="container py-5">
-            <div class="row g-4">
-            <div class="header-main text-center shadow">
+            
+                <div class="breadcrumb-custom mb-4 shadow-sm text-white">
                 <a href="{% url 'chencha:dashboard' %}" class="text-white">ዳሽቦርድ</a> /
-                <a href="{% url 'chencha:show_announcement' %}" class="text-white">ማስታወቂያዎች</a><a href="{% url 'chencha:announcement_detail' %}">ስሰፋ</a>
+                <a href="{% url 'chencha:show_announcement' %}" class="text-white">ማስታወቂያዎች</a>/
+                <a href="{% url 'chencha:announcement_detail' pk=announcement.id %}">በስፋት</a>
+                </div>
+
                 <div class="col-md-6 col-lg-4">
                     <div class="card h-100 shadow-sm" onclick="toggleContent(this)" style="cursor: pointer;">
                         {% if announcement.image %}
@@ -20,18 +24,11 @@
                         </div>
                         <div class="card-footer bg-transparent border-0 text-end">
                             <small class="text-muted">
-                                Posted on {{ announcement.created_at|date:"M d, Y" }}
+                                በ {{ announcement.created_at|to_ethiopian }} የተለጠፈ
                             </small>
                         </div>
                     </div>
                 </div>
             </div>
-    </div>
-    
-    <footer class="text-center py-4">
-        <div class="container">
-            <span class="text-muted">&copy; {{ now|date:"Y" }} ጨንቻ ሁለትና ደረጃ ትምህርት ቤት. All rights reserved.</span>
-        </div>
-    </footer>
 </body>
 {% endblock %}

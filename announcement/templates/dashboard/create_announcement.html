@@ -7,7 +7,8 @@
             <div class="breadcrumb-custom mb-10 shadow-sm">
                 <div class="text-white">
                     <a href="{% url 'chencha:dashboard' %}" class="text-white">ዳሽቦርድ</a> /
-                    <a href="{% url 'chencha:show_announcement' %}" class="text-white">ማስታወቂያዎች</a>
+                    <a href="{% url 'chencha:show_announcement' %}" class="text-white">ማስታወቂያዎች</a>/
+                    <a href="{% url 'chencha:create_announcement' %}" class="text-white">ማስታወቂያ ለመጻፍ</a>
                 </div>
             </div>
         <div class="col-md-8">
@@ -21,6 +22,9 @@
                         {% bootstrap_form form %}
                         <button type="submit" class="btn btn-primary w-100 mt-3">ማስታወቅያውን ለጥፍ</button>
                     </form>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'chencha:show_announcement' %}" class="btn btn-secondary">ይቅር</a>
                 </div>
             </div>
         </div>

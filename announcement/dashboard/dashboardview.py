@@ -17,12 +17,12 @@ class AnnouncementCreateView(LoginRequiredMixin, CreateView):
 class AnnouncementListView(LoginRequiredMixin, ListView):
     model = Announcement
     template_name = 'dashboard/show_announcement.html'
-    context_object_name = '/announcements/'
+    context_object_name = 'announcements'
 
 class AnnouncementDetailView(LoginRequiredMixin, DetailView):
     model = Announcement
     template_name = 'dashboard/announcement_detail.html'
-    context_object_name = '/show_announcement/'
+    context_object_name = 'announcement'
 
 
 class AnnouncementUpdateView(LoginRequiredMixin, UpdateView):

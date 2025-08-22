@@ -2,12 +2,12 @@
 
 {% block content %}
     <div class="container py-5">
-        <h1 class="mb-4">Confirm Deletion</h1>
-        <p>Are you sure you want to delete the announcement "{{ announcement.title }}"?</p>
+        <h1 class="mb-4">ለማጥፋትህን አረጋግጥ</h1>
+        <p>"{{ announcement.title }}" ማስታወቅያ ማጥፋት ይፍልጋሉ?</p>
         <form method="post">
             {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Delete</button>
-            <a href="{% url 'chencha:show_announcement' %}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-danger">አው</button>
+            <a href="{% url 'chencha:show_announcement' %}" class="btn btn-secondary">አይ</a>
         </form>
     </div>
 {% endblock %}

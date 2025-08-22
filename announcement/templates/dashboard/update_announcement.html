@@ -4,6 +4,11 @@
 
 {% block content %}
     <div class="container mt-5">
+        <div class="breadcrumb-custom mb-4 shadow-sm text-white">
+            <a href="{% url 'chencha:dashboard' %}" class="text-white">ዳሽቦርድ</a>/
+            <a href="{% url 'chencha:show_announcement' %}" class="text-white">ማስታወቂያዎች</a>/
+            <a href="{% url 'chencha:update_announcement' pk=announcement.id %}" class="text-white">ማስታወቅያ ለማስተካከል</a>
+        </div>
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card shadow-sm">
@@ -14,8 +19,11 @@
                         <form method="post" enctype="multipart/form-data">
                             {% csrf_token %}
                             {% bootstrap_form form %}
-                            <button type="submit" class="btn btn-primary w-100 mt-3">ማስታወቅያውን አስተካክል</button>
+                            <button type="submit" class="btn btn-primary w-100 mt-3">የተስተካከለዉን ለጥፍ</button>
                         </form>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'chencha:show_announcement' %}" class="btn btn-secondary">ይቅር</a>
                     </div>
                 </div>
             </div>
