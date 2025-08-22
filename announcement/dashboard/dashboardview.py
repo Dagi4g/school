@@ -45,3 +45,16 @@ class StudentListView(LoginRequiredMixin, ListView):
     model = Student
     template_name = 'dashboard/student/show_students.html'
     context_object_name = 'students'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        grades = Grade.objects.prefetch_related('sections__students').all()
+        for grade in grades:
+            grade.ordered_section = grade.sections.all().order_by("name")
+            
+            for section in grade.ordered_section:
+                section.ordered_students = section.students.all().order_by('student_name','father_name','grand_father_name')
+        
+        context['grades'] = grades
+        return context

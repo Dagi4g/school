@@ -58,7 +58,7 @@ class Grade(models.Model):
 class Section(models.Model):
     section_choice = [(chr(i), chr(i)) for i in range(65, 91)]  # A-Z
     name = models.CharField(max_length=255, choices=section_choice)
-    grade = models.ForeignKey(Grade, on_delete=models.CASCADE)
+    grade = models.ForeignKey(Grade, on_delete=models.CASCADE, related_name='sections')
 
     def __str__(self):
         return self.name
@@ -76,7 +76,7 @@ class Student(models.Model):
     parent = models.ForeignKey(Parent, on_delete=models.CASCADE)
     email = models.EmailField(null=True, blank=True)
     phone = models.CharField(max_length=20, null=True, blank=True)
-    section = models.ForeignKey(Section, on_delete=models.CASCADE)
+    section = models.ForeignKey(Section, on_delete=models.CASCADE, related_name='students')
 
     def __str__(self):
         return f"{self.student_name} {self.father_name} {self.grand_father_name}"
