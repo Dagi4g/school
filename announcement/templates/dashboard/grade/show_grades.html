@@ -1,0 +1,21 @@
+{% extends 'announcement/base.html' %}
+{% load static %}
+{% load django_bootstrap5 %}
+{% block content %}
+    <h1>Grades</h1>
+    <h4>Academic Year: {{ academic_year }} </h4>
+    <table>
+        <thead align="center">
+            <tr>
+                <th>Grade Name</th>
+            </tr>
+        </thead>
+        <tbody align="center">
+            {% for grade in grades %}
+                <tr>
+                    <td><a href="{% url 'chencha:show_sections' ay_pk=academic_year.pk grade_pk=grade.pk %}">{{ grade.name }}</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endblock %}

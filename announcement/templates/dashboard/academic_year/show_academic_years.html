@@ -1,0 +1,24 @@
+{% extends 'announcement/base.html' %}
+
+{% block content %}
+    <h1>Academic Years</h1>
+    <p><a href="{% url 'chencha:create_academic_year' %}" class=" btn-primary mb-3">Create New Academic Year</a></p>
+    <table>
+        <thead>
+            <tr>
+                <th>Academic Year</th>
+                <th>Start Year</th>
+                <th>End Year</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for year in academicyears %}
+                <tr>
+                    <td><a href="{% url 'chencha:show_grade' ay_pk=year.pk %}">{{ year }}</a></td>
+                    <td>{{ year.start_year.year }}</td>
+                    <td>{{ year.end_year.year }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

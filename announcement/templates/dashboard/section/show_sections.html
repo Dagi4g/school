@@ -1,0 +1,22 @@
+{% extends "announcement/base.html" %}
+{% load static %}
+{% load django_bootstrap5 %}
+{% block content %}
+    <h1>Sections</h1>
+    <h4>{{ sections.first.grade|title }}</h4>
+    <a href="{% url 'chencha:create_section' ay_pk=academic_year.id grade_pk=grade.id %}" class="btn btn-primary">Create Section</a>
+    <table>
+        <thead align="center">
+            <tr>
+                <th>Section Name</th>
+            </tr>
+        </thead>
+        <tbody align="center">
+            {% for section in sections %}
+                <tr>
+                    <td><a href="{% url 'chencha:show_students' ay_pk=academic_year.pk grade_pk=grade.pk section_pk=section.pk %}">{{ section.name }}</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

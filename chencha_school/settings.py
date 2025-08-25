@@ -38,6 +38,7 @@ INSTALLED_APPS = [
 
     #bootstrap app
     'django_bootstrap5',
+    'formtools',
     #django apps
     'django.contrib.admin',
     'django.contrib.auth',

@@ -1,0 +1,12 @@
+{% extends "announcement/base.html" %}
+{% load static %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+    <h1>Create Grade</h1>
+    <form method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+{% endblock %}

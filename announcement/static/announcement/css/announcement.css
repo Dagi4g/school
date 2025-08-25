@@ -52,3 +52,9 @@ body {
     font-weight: 800;
     letter-spacing: 1px;
 }
+.footer {
+    background: #222;
+    color: #bbb;
+    padding: 15px 0;
+    margin-top: auto;
+}

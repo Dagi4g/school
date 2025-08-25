@@ -1,0 +1,25 @@
+{% extends "announcement/base.html" %}
+{% load static %}
+{% load django_bootstrap5 %}
+{% block content %}
+    <div class="card shadow-sm mt-4">
+    <!-- Card Header -->
+    <div class="card-header bg-primary text-white">
+        መረጃ መዝግብ
+    </div>
+
+    <!-- Card Body -->
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            <input type="hidden" name="section_id" value="{{ section.id }}">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <div class="d-flex justify-content-end mt-3">
+                <button type="submit" class="btn btn-success">
+                    መዝግብ
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}

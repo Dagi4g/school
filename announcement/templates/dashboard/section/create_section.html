@@ -1,0 +1,19 @@
+{% extends "announcement/base.html" %}
+{% load static %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div class="container">
+    <h2>ክፍል ይገነባ</h2>
+    <form method="post" enctype="multipart/form-data">
+      <input type="hidden" name="grade_pk" value="{{ grade.pk }}">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <input type="hidden" name="grade_pk" value="{{ grade.pk }}">
+        {% if section_exists_error %}
+            <div class="alert alert-danger">{{ section_exists_error }}</div>
+        {% endif %}
+        <button type="submit" class="btn btn-primary">ይገነባ</button>
+    </form>
+</div>
+{% endblock content %}
