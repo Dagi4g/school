@@ -1,6 +1,9 @@
 from django import forms
 from django.forms import inlineformset_factory
+from django.core.exceptions import ValidationError
+
 from .models import (Announcement,Student,Parent,Section,Grade,AcademicYear)
+
 
 class AnnouncementManagementForm(forms.ModelForm):
     class Meta:
@@ -50,7 +53,13 @@ class StudentManagementForm(forms.ModelForm):
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
         }
-    
+        
+        def validate_unique(self):
+            try:
+                super().validate_unique()
+            except ValidationError:
+                raise ValidationError("A student with this name and father's name already exists in this academic year.")
+
     def __init__(self,*args,**kwargs):
         section = kwargs.pop('section',None)
         super().__init__(*args,**kwargs)
@@ -60,11 +69,47 @@ class StudentManagementForm(forms.ModelForm):
             
     
 
-class ParentForm(forms.ModelForm):
-    class Meta:
-        model = Parent
-        fields = ['name','father_name','relation_ship','email','phone','work','income']
-        
+
+class ParentForm(forms.Form):
+    name = forms.CharField(
+        max_length=255,
+        label="ስም",
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'የአሳዳግ ስም'})
+    )
+    
+    father_name = forms.CharField(
+        max_length=255,
+        label="የአባት ሥም",
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'የአባት ስም'})
+    )
+    
+    relation_ship = forms.ChoiceField(
+        choices=Parent.relation_ship_choice,
+        label="ዝምድና",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    email = forms.EmailField(
+        required=False,
+        label="እማኢል",
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'እምይል'})
+    )
+    phone = forms.CharField(
+        required=False,
+        label="ስልክ",
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'ስልክ'})
+    )
+    work = forms.CharField(
+        required=False,
+        label="ስራ",
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'ስራ'})
+    )
+    income = forms.DecimalField(
+        required=False,
+        label="ደሞዝ",
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'የወር ደሞዝ'})
+    )
+
+
 
 class SectionForm(forms.ModelForm):
     class Meta:

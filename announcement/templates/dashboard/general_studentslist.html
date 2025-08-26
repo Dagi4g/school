@@ -1,14 +1,16 @@
 {% extends "announcement/base.html" %}
 {% load static %}
+{% load django_bootstrap5 %}
 
 {% block content %}
 <div class="container my-4">
     <h2 class="text-center mb-4">Student List</h2>
     <div class="mb-3">
         <a href="{% url 'chencha:academic_years' %}" class="btn btn-primary">Add New Student</a>
+    </div>
 
     {% for grade in grades %}
-    <div class="card mb-3 shadow-sm">
+    
         <div class="card-header bg-primary text-white">
             Grade: {{ grade.name }}
         </div>
@@ -36,17 +38,11 @@
                         <tr>
                             <td>{{ student.student_name }}</td>
                             <td>{{ student.father_name }}</td>
-                            <td>{{ student.grandfather_name }}</td>
+                            <td>{{ student.grand_father_name }}</td>
                             <td>{{ student.birth_date }}</td>
                             <td>{{ student.age }}</td>
                             <td>
-                                {% if student.sex == "male" %}
-                                    <span class="badge bg-primary">Male</span>
-                                {% elif student.sex == "female" %}
-                                    <span class="badge bg-pink">Female</span>
-                                {% else %}
-                                    <span class="badge bg-secondary">Other</span>
-                                {% endif %}
+                                    <span class="badge bg-primary">{{ student.sex }}</span>
                             </td>
                             <td>
                                     <span class="badge bg-info text-dark">{{ student.parent.name }} </span></th>
@@ -67,7 +63,7 @@
             </div>
             {% endfor %}
         </div>
-    </div>
+    
     {% empty %}
     <p class="text-center text-muted">No grades found.</p>
     {% endfor %}

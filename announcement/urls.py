@@ -20,9 +20,9 @@ urlpatterns = [
     path("delete_announcement/<int:pk>/", dashboardview.AnnouncementDeleteView.as_view(), name="delete_announcement"),
     # student related dashboard view
     path("students/", dashboardview.GeneralStudentListView.as_view(), name="student_list"),
-    path("academic_year/<int:ay_pk>/grade/<int:grade_pk>/section/<int:section_pk>/register_student/",dashboardview.StudentCreateView.as_view(),name="register_student"),
+    path("academic_year/<int:ay_pk>/grade/<int:grade_pk>/section/<int:section_pk>/register_student/",dashboardview.StudentParentCreateView.as_view(),name="register_student"),
     # section related views
-    path("create_section/<int:grade_pk>/<int:ay_pk>/", dashboardview.SectionCreateView.as_view(), name="create_section"),
+    path("academic_year/<int:ay_pk>/grade/<int:grade_pk>/create_section", dashboardview.SectionCreateView.as_view(), name="create_section"),
     #path("show_sections/", dashboardview.SectionListView.as_view(), name="show_sections"),
     #path("update_section/<int:pk>/", dashboardview.SectionUpdateView.as_view(), name="update_section"),
     #path("section_detail/<int:pk>/", dashboardview.SectionDetailView.as_view(), name="section_detail"),

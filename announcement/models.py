@@ -21,7 +21,7 @@ class Parent(models.Model):
     name = models.CharField(max_length=255)
     father_name = models.CharField(max_length=255)
     relation_ship_choice = [('አባት', 'አባት'), ('እናት', 'እናት'), ('አሳዳጊ', 'አሳዳጊ'), ('ሌላ', 'ሌላ')]
-    relation_ship = models.CharField(max_length=255, choices=relation_ship_choice)
+    relation_ship = models.CharField(choices=relation_ship_choice)
     email = models.EmailField(null=True,blank=True)
     phone = models.CharField(max_length=20)
     work = models.CharField(max_length=255)
@@ -40,6 +40,9 @@ class Parent(models.Model):
 class AcademicYear(models.Model):
     start_year = models.DateField()
     end_year = models.DateField()
+
+    class Meta:
+        unique_together = ('start_year', 'end_year')
 
     def __str__(self):
         return f"{self.start_year.year}/{self.end_year.year}"
@@ -78,16 +81,18 @@ class Student(models.Model):
     student_name = models.CharField(max_length=255)
     father_name = models.CharField(max_length=255)
     grand_father_name = models.CharField(max_length=255)
-    birth_date = models.DateField(default=timezone.now()-timedelta(days=365*15))
+    birth_date = models.DateField()
     age = models.PositiveIntegerField()
     sex = models.CharField(max_length=10, choices=[('ወንድ', 'ወንድ'), ('ሰት', 'ሰት')])
     parent = models.ForeignKey(Parent, on_delete=models.CASCADE)
     email = models.EmailField(null=True, blank=True)
     phone = models.CharField(max_length=20, null=True, blank=True)
     section = models.ForeignKey(Section, on_delete=models.CASCADE, related_name='students')
-    
+    academic_year = models.ForeignKey(AcademicYear, on_delete=models.CASCADE, related_name='students')
+
     class Meta:
-        unique_together = ('student_name', 'father_name', 'grand_father_name','section')
+        unique_together = [('student_name', 'father_name', 'grand_father_name','academic_year')]
+        
 
     def __str__(self):
         return f"{self.student_name} {self.father_name} {self.grand_father_name}"

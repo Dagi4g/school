@@ -3,6 +3,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect,get_object_or_404
 from django.urls import reverse_lazy
 from django.db.utils import IntegrityError
+from django.core.exceptions import ValidationError
+from django.shortcuts import render
+from django.db import IntegrityError, transaction
+
 
 
 from ..forms import (AnnouncementManagementForm,
@@ -144,7 +148,7 @@ class SectionListView(LoginRequiredMixin,ListView):
 
 class SectionCreateView(LoginRequiredMixin, CreateView):
     model = Section
-    form_class = SectionForm
+    form_class = SectionForm 
     template_name = 'dashboard/section/create_section.html'
 
     def get_success_url(self):
@@ -157,16 +161,15 @@ class SectionCreateView(LoginRequiredMixin, CreateView):
         context['academic_year'] = academic_year
         context['grade'] = grade
         return context
-
+    
     def form_valid(self, form):
-        form.instance.grade = get_object_or_404(Grade, pk=self.kwargs['grade_pk'])
+        grade = get_object_or_404(Grade, pk=self.kwargs['grade_pk'])
+        form.instance.grade = grade
         try:
             return super().form_valid(form)
-        except IntegrityError as e:
-            section_exists_error = "Section with this name already exists."
-            context = self.get_context_data(form=form)
-            context['section_exists_error'] = section_exists_error
-            return self.render_to_response(context)
+        except Exception as e:
+            form.add_error(None, "A section with this name already exists in this grade.")
+            return self.form_invalid(form)
 
 class StudentsListView(LoginRequiredMixin, ListView):
     model = Student
@@ -200,5 +203,68 @@ class ParentCreateView(LoginRequiredMixin,CreateView):
         context['academic_year'] = get_object_or_404(AcademicYear, pk=self.kwargs['ay_pk'])
         context['parent_exists'] = True
         return context
-    
-    
+
+
+class StudentParentCreateView(TemplateView):
+    template_name = "dashboard/student/create_student.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        section = get_object_or_404(Section, id=self.kwargs.get('section_pk'))
+        context['section'] = section
+        context['parent_form'] = ParentForm()
+        context['student_form'] = StudentManagementForm()
+        return context
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, self.get_context_data())
+
+    def post(self, request, *args, **kwargs):
+        parent_form = ParentForm(request.POST)
+        student_form = StudentManagementForm(request.POST)
+
+        if parent_form.is_valid() and student_form.is_valid():
+            parent_data = parent_form.cleaned_data
+            try:
+                with transaction.atomic():
+                    # Create or get the parent
+                    parent, created = Parent.objects.get_or_create(
+                        name=parent_data['name'],
+                        father_name=parent_data['father_name'],
+                        defaults={
+                            'relation_ship': parent_data.get('relation_ship'),
+                            'email': parent_data.get('email'),
+                            'phone': parent_data.get('phone'),
+                            'work': parent_data.get('work'),
+                            'income': parent_data.get('income'),
+                        }
+                    )
+            except IntegrityError:
+                # If duplicate slips through, fetch existing parent
+                parent = Parent.objects.get(
+                    name=parent_data['name'],
+                    father_name=parent_data['father_name']
+                )
+
+            # Create the student object but don't save yet
+            student = student_form.save(commit=False)
+            student.parent = parent
+            section = get_object_or_404(Section, id=self.kwargs.get('section_pk'))
+            student.section = section
+            student.academic_year = section.grade.academic_year
+
+            # Check unique constraint before saving
+            try:
+                student.validate_unique()
+                student.save()
+                return redirect('chencha:student_list')
+            except ValidationError as e:
+                # Add errors to form to show in UI
+                student_form.add_error(None, 'ይህ ተማር ከዝህ በፊት ተመዝግቧል። እባክዎ ሌላ ተማር ይመዝግቡ።')
+
+        # Re-render the page with errors if forms are invalid or duplicate
+        context = {
+            'parent_form': parent_form,
+            'student_form': student_form,
+        }
+        return render(request, self.template_name, context)

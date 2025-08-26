@@ -3,7 +3,7 @@
 {% load django_bootstrap5 %}
 {% block content %}
     <h1>Sections</h1>
-    <h4>{{ sections.first.grade|title }}</h4>
+    <h4>{{ sections.grade|title }}</h4>
     <a href="{% url 'chencha:create_section' ay_pk=academic_year.id grade_pk=grade.id %}" class="btn btn-primary">Create Section</a>
     <table>
         <thead align="center">
