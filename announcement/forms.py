@@ -8,7 +8,7 @@ from .models import (Announcement,Student,Parent,Section,Grade,AcademicYear)
 class AnnouncementManagementForm(forms.ModelForm):
     class Meta:
         model = Announcement
-        fields = ['title', 'content', 'image', 'video', 'audio', 'created_at','expires_at']
+        fields = ['title', 'content', 'image', 'video', 'audio', 'created_at','expires_at',]
         labels = {
             'title': 'ሪዕስ',
             'content': 'ዝረዝር ሐተታ',
@@ -32,7 +32,7 @@ class AnnouncementManagementForm(forms.ModelForm):
 class StudentManagementForm(forms.ModelForm):
     class Meta():
         model = Student
-        fields = ['student_name', 'father_name', 'grand_father_name','birth_date', 'age', 'sex', 'email', 'phone',]
+        fields = ['student_name', 'father_name', 'grand_father_name','birth_date', 'age', 'sex', 'email', 'phone','student_picture']
         labels = {
             'student_name': 'የተማሪ ስም',
             'father_name': 'የአባት ስም',
@@ -42,6 +42,7 @@ class StudentManagementForm(forms.ModelForm):
             'sex': 'ፆታ',
             'email': 'ኢሜይል',
             'phone': 'ስልክ',
+            'student_picture': 'የተማሪ ምስል'
         }
         widgets = {
             'student_name': forms.TextInput(attrs={'class': 'form-control'}),
@@ -108,6 +109,11 @@ class ParentForm(forms.Form):
         label="ደሞዝ",
         widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'የወር ደሞዝ'})
     )
+    parent_picture = forms.ImageField(
+        required=True,
+        label="የወላጅ ምስል",
+        widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'})
+    )
 
 
 
@@ -131,4 +137,11 @@ class AcademicYearForm(forms.ModelForm):
         }
 
 
-
+class StudentLookUpForm(forms.Form):
+    name = forms.CharField(max_length=100,label='የተማር ስም')
+    father_name = forms.CharField(max_length=100, label='የአባት ስም')
+    grand_father_name  = forms.CharField(max_length=100, label='የአያት ስም')
+    grade = forms.ChoiceField(
+        choices=Grade.grade_choice,
+        label='ክፍል',
+        )

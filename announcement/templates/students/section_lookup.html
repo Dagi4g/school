@@ -1,0 +1,46 @@
+{% extends "announcement/base.html" %}
+{% load static %}
+{% load django_bootstrap5 %}
+{% block content %}
+
+<div class="container my-5">
+    <!-- Page Header -->
+    <div class="text-center mb-4">
+        <h2 class="fw-bold">Student Lookup</h2>
+        <p class="text-muted">Enter your full name to see your section instantly</p>
+    </div>
+
+    <!-- Lookup Form -->
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm p-4">
+                <form method="post" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+                    <div class="d-grid mt-3">
+                        <button type="submit" class="btn btn-primary btn-lg">Find Section</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Result Section -->
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-6">
+            {% if section %}
+                <div class="alert alert-success text-center shadow-sm" role="alert">
+                    <h4 class="alert-heading">Student Section</h4>
+                    <p class="mb-0">{{ section }}</p>
+                </div>
+            {% elif error %}
+                <div class="alert alert-danger text-center shadow-sm" role="alert">
+                    {{ error }}
+                </div>
+
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

@@ -1,4 +1,4 @@
-from django.views.generic import CreateView,ListView,DeleteView,UpdateView,DetailView,TemplateView
+from django.views.generic import CreateView,ListView,DeleteView,UpdateView,DetailView,TemplateView,FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect,get_object_or_404
 from django.urls import reverse_lazy
@@ -13,7 +13,8 @@ from ..forms import (AnnouncementManagementForm,
                      StudentManagementForm,
                      SectionForm,GradeForm,
                      AcademicYearForm,
-                     ParentForm
+                     ParentForm,
+                     StudentLookUpForm,
                      )
 from ..models import (Announcement,
                       Student,
@@ -268,3 +269,31 @@ class StudentParentCreateView(TemplateView):
             'student_form': student_form,
         }
         return render(request, self.template_name, context)
+
+class SectionLookUpView(FormView):
+    template_name = 'students/section_lookup.html'
+    form_class = StudentLookUpForm
+    
+    def form_valid(self,form):
+        name = form.cleaned_data['name']
+        father_name = form.cleaned_data['father_name']
+        grand_father_name = form.cleaned_data['grand_father_name']
+        grade = form.cleaned_data['grade']
+        
+        try :
+            student = Student.objects.get(
+                student_name__icontains=name.strip().title(),
+                father_name__icontains=father_name.strip().title(),
+                grand_father_name__icontains=grand_father_name.strip().title(),
+                section__grade__name=grade,
+            )
+            return render(
+                self.request,
+                self.template_name,
+                {'section':student.section,'student':student,'form':form},
+            )
+        except Student.DoesNotExist:
+            return render(self.request,
+                        self.template_name,
+                        {'error':f"no student found with the specified information in {form.cleaned_data['grade']}",'form': form}
+                        )

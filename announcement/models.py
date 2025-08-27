@@ -26,7 +26,7 @@ class Parent(models.Model):
     phone = models.CharField(max_length=20)
     work = models.CharField(max_length=255)
     income = models.DecimalField(max_digits=10, decimal_places=2,null=True, blank=True  )
-
+    parent_picture = models.ImageField(upload_to='parents/images', blank=True, null=True)
     class Meta:
         unique_together = ('name', 'father_name',)
 
@@ -40,6 +40,7 @@ class Parent(models.Model):
 class AcademicYear(models.Model):
     start_year = models.DateField()
     end_year = models.DateField()
+    is_current = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ('start_year', 'end_year')
@@ -89,6 +90,7 @@ class Student(models.Model):
     phone = models.CharField(max_length=20, null=True, blank=True)
     section = models.ForeignKey(Section, on_delete=models.CASCADE, related_name='students')
     academic_year = models.ForeignKey(AcademicYear, on_delete=models.CASCADE, related_name='students')
+    student_picture = models.ImageField(upload_to='students/images', blank=True, null=True)
 
     class Meta:
         unique_together = [('student_name', 'father_name', 'grand_father_name','academic_year')]
