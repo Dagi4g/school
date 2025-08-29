@@ -12,7 +12,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for year in academicyears %}
+            {% for year in academic_year %}
                 <tr>
                     <td><a href="{% url 'chencha:show_grade' ay_pk=year.pk %}">{{ year }}</a></td>
                     <td>{{ year.start_year.year }}</td>

@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save,post_delete
 from django.dispatch import receiver
 
 from .models import AcademicYear,Grade
@@ -12,4 +12,14 @@ def create_related_objects(sender, instance, created, **kwargs):
             Grade.objects.create(name=grade_name, academic_year=instance)
         
         # Make all academic year not the current id the current year 
-        AcademicYear.objects.exclude(id=instance.id).edit(is_current=False)
+        AcademicYear.objects.exclude(id=instance.id).update(is_current=False)
+        instance.is_current = True
+        instance.save()
+
+@receiver(post_delete ,sender=AcademicYear)
+def handle_deleted_academic_year(sender,instance,**kwargs):
+    if instance.is_current:
+        if last_year := AcademicYear.objects.order_by('-id').first():
+            last_year.is_current = True
+            last_year.save()
+        

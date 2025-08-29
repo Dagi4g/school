@@ -5,16 +5,20 @@
 {% block content %}
 <div class="container my-4">
     <h2 class="text-center mb-4">Student List</h2>
+    {% for year in academic_year %}
+    <p> {{ year }}</p>
     <div class="mb-3">
         <a href="{% url 'chencha:academic_years' %}" class="btn btn-primary">Add New Student</a>
     </div>
 
-    {% for grade in grades %}
+
+    {% for grade in year.order_grade %}
     
         <div class="card-header bg-primary text-white">
             Grade: {{ grade.name }}
         </div>
         <div class="card-body">
+        
             {% for section in grade.ordered_section %}
             <h5 class="mt-3">Section: {{ section.name }}</h5>
             <div class="table-responsive">
@@ -48,7 +52,7 @@
                                     <span class="badge bg-info text-dark">{{ student.parent.name }} </span></th>
                             <th>
                                 <span class="badge bg-info table-dark">{{ student.parent.relation_ship}}</span><br>
-                               
+
                             </td>
                             <td>{{ student.email }}</td>
                             <td>{{ student.phone }}</td>
@@ -66,6 +70,7 @@
     
     {% empty %}
     <p class="text-center text-muted">No grades found.</p>
+    {% endfor %}
     {% endfor %}
 </div>
 {% endblock %}

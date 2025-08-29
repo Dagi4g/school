@@ -66,27 +66,36 @@ class GeneralStudentListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        grades = Grade.objects.prefetch_related('sections__students').all()
-        for grade in grades:
-            grade.ordered_section = grade.sections.all().order_by("name")
+        academic_year = AcademicYear.objects.prefetch_related('grades__sections__students').all().order_by('-start_year')
+        for year in academic_year:
+            year.order_grade = year.grades.all()
+            for grade in year.order_grade:
+                grade.ordered_section = grade.sections.all().order_by("name")
             
-            for section in grade.ordered_section:
-                section.ordered_students = section.students.all().order_by('student_name','father_name','grand_father_name')
+                for section in grade.ordered_section:
+                    section.ordered_students = section.students.all().order_by('student_name','father_name','grand_father_name')
         
-        context['grades'] = grades
+        context['academic_year'] = academic_year
         return context
 
 class AcademicYearListView(LoginRequiredMixin, ListView):
     model = AcademicYear
     template_name = 'dashboard/academic_year/show_academic_years.html'
-    context_object_name = 'academicyears'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['academic_year'] = self.model.objects.all().order_by('-start_year')
+        print(self.model.objects.all().order_by('-start_year'))
+
+        return context
 
 class AcademicYearCreateView(LoginRequiredMixin, CreateView):
     model = AcademicYear
     form_class = AcademicYearForm
     template_name = 'dashboard/academic_year/create_academic_year.html'
     success_url = '/academic_years/'
+    
+    
 
 # grade related view.
 class GradeListView(LoginRequiredMixin,ListView):
@@ -261,7 +270,7 @@ class StudentParentCreateView(TemplateView):
                 return redirect('chencha:student_list')
             except ValidationError as e:
                 # Add errors to form to show in UI
-                student_form.add_error(None, 'ይህ ተማር ከዝህ በፊት ተመዝግቧል። እባክዎ ሌላ ተማር ይመዝግቡ።')
+                student_form.add_error(None, 'ይህ ተማር ከዝህ በፊት ተመዝግቧል ። እባክዎ ሌላ ተማር ይመዝግቡ።')
 
         # Re-render the page with errors if forms are invalid or duplicate
         context = {
@@ -279,6 +288,7 @@ class SectionLookUpView(FormView):
         father_name = form.cleaned_data['father_name']
         grand_father_name = form.cleaned_data['grand_father_name']
         grade = form.cleaned_data['grade']
+        current_academic_year = AcademicYear.objects.get(is_current=True)
         
         try :
             student = Student.objects.get(
@@ -286,6 +296,8 @@ class SectionLookUpView(FormView):
                 father_name__icontains=father_name.strip().title(),
                 grand_father_name__icontains=grand_father_name.strip().title(),
                 section__grade__name=grade,
+                section__grade__academic_year=current_academic_year
+                
             )
             return render(
                 self.request,
@@ -295,5 +307,5 @@ class SectionLookUpView(FormView):
         except Student.DoesNotExist:
             return render(self.request,
                         self.template_name,
-                        {'error':f"no student found with the specified information in {form.cleaned_data['grade']}",'form': form}
+                        {'error':f"Oops! We couldn’t locate a student with the information you provided for {grade}, {current_academic_year}. Please double-check and try again.",'form': form}
                         )
