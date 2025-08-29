@@ -85,7 +85,6 @@ class AcademicYearListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['academic_year'] = self.model.objects.all().order_by('-start_year')
-        print(self.model.objects.all().order_by('-start_year'))
 
         return context
 
