@@ -2,7 +2,7 @@ from django import forms
 from django.forms import inlineformset_factory
 from django.core.exceptions import ValidationError
 
-from .models import (Announcement,Student,Parent,Section,Grade,AcademicYear)
+from .models import (Announcement,Student,Parent,Section,Grade,AcademicYear,AutoSectionGrade)
 
 
 class AnnouncementManagementForm(forms.ModelForm):
@@ -145,3 +145,17 @@ class StudentLookUpForm(forms.Form):
         choices=Grade.grade_choice,
         label='ክፍል',
         )
+    
+
+from django.core.exceptions import ValidationError
+
+class AutoSectionGradeForm(forms.ModelForm):
+    class Meta:
+        model = AutoSectionGrade
+        fields = '__all__'
+
+    def validate_unique(self,):
+        try:
+            super().validate_unique()
+        except ValidationError as e:
+            raise ValidationError({'__all__': ['this student already exists']}) from e

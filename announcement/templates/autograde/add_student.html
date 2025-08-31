@@ -1,0 +1,36 @@
+{% extends 'announcement/base.html' %}
+{% load static %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm border-0 rounded-3">
+                
+                <!-- Card Header -->
+                <div class="card-header bg-primary text-white text-center fs-5 fw-bold rounded-top">
+                    የተማር መረጃ
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body p-4">
+                    <form method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="section_id" value="{{ section.id }}">
+                        {% csrf_token %}
+                        {% bootstrap_form form %}
+
+                        <!-- Submit Button -->
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-success px-4">
+                                መዝግብ
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

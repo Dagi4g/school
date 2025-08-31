@@ -7,4 +7,6 @@ admin.site.register(models.AcademicYear)
 admin.site.register(models.Grade)
 admin.site.register(models.Section)
 admin.site.register(models.Student)
+admin.site.register(models.AutoSectionGrade)
+
 

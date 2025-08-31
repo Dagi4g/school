@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils import timezone
+from django.core.validators import MinValueValidator, MaxValueValidator
+
 from datetime import timedelta
 
 class Announcement(models.Model):
@@ -101,3 +103,35 @@ class Student(models.Model):
 
     def __repr__(self):
         return super().__repr__()
+    
+    
+class AutoSectionGrade(models.Model):
+    student_name = models.CharField(max_length=225)    
+    father_name = models.CharField(max_length=225)    
+    grandfather_name = models.CharField(max_length=225)
+    age = models.PositiveIntegerField()
+    sex_choice = [('m','M'),('f','F')]
+    sex = models.CharField(max_length=10,choices=sex_choice)
+    school_choice = [('junior','Junior'),('chafe','Chafe'),('tolola','Tolola'),('masho','Masho'),('lela','lela'),('betel','Betel')]
+    previous_school = models.CharField(max_length=225,choices=school_choice)
+    score_choice = [(i,i) for i in range(50,101)]
+    minstry_score = models.PositiveIntegerField(
+        validators=[
+            MinValueValidator(50),
+            MaxValueValidator(100)
+        ],
+        choices=score_choice
+    )
+    
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['student_name','father_name','grandfather_name'],
+                name='unique_student_fullname'
+            )
+        ]    
+    def __str__(self):
+        return f'{self.student_name} {self.father_name} {self.grandfather_name}'
+    
+    def __rep__(self):
+        return f'{self.student_name} {self.father_name} {self.grandfather_name}'
