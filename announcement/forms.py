@@ -159,3 +159,8 @@ class AutoSectionGradeForm(forms.ModelForm):
             super().validate_unique()
         except ValidationError as e:
             raise ValidationError({'__all__': ['this student already exists']}) from e
+        
+
+
+class SectionInputForm(forms.Form):
+    section_number = forms.IntegerField(label="Enter Section Number")

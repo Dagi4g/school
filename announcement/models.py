@@ -122,6 +122,7 @@ class AutoSectionGrade(models.Model):
         ],
         choices=score_choice
     )
+    section  = models.CharField(max_length=20,null=True,blank=True)
     
     class Meta:
         constraints = [

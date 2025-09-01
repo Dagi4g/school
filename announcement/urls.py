@@ -8,7 +8,10 @@ app_name = 'chencha'
 
 urlpatterns = [
     path("", views.home, name="home"),
-    path('autograde',views.AutoGradeSectionCreateView.as_view(),name='autograde'),
+    path('assign',views.SectionAssignerView.as_view(),name='assign'),
+    path('autograde_create',views.AutoGradeSectionCreateView.as_view(),name='autograde_create'),
+    path('student_nosection',views.show_students_nosection,name='student_nosection'),
+    path('list_students',views.show_sections,name='show_sections'),
     path('look_up/',dashboardview.SectionLookUpView.as_view(),name='lookup'),
     path("announcements/", views.AnnouncementListView.as_view(), name="announcement_list"),
     path("about_us/", views.about_us, name="about_us"),

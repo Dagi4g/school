@@ -23,9 +23,9 @@ def assigns(students, num_sections) -> list[list[dict]]:
     school_groups = defaultdict(list)
     for s in students:
         try:
-            if 'school' not in s or 'score' not in s or 'sex' not in s:
+            if 'previous_school' not in s or 'minstry_score' not in s or 'sex' not in s:
                 raise KeyError("Missing 'school', 'score', or 'sex'")
-            school_groups[s['school']].append(s)
+            school_groups[s['previous_school']].append(s)
         except Exception as e:
             error_log.append((s, str(e)))
             continue
@@ -33,11 +33,13 @@ def assigns(students, num_sections) -> list[list[dict]]:
     # Sort each school's students by score
     for school in school_groups:
         try:
-            school_groups[school].sort(key=lambda x: x['score'], reverse=True)
+            school_groups[school].sort(key=lambda x: x['minstry_score'], reverse=True)
         except Exception as e:
             error_log.append((f"School {school}", str(e)))
+    
 
     total_students = sum(len(lst) for lst in school_groups.values())
+    print(total_students)
     if total_students == 0:
         raise ValueError("No valid students to assign")
 
@@ -55,9 +57,9 @@ def assigns(students, num_sections) -> list[list[dict]]:
             continue
 
         # Performance categorization
-        top_students = [s for s in s_list if s['score'] >= 75]
-        average_students = [s for s in s_list if 65 <= s['score'] < 75]
-        struggling_students = [s for s in s_list if s['score'] < 65]
+        top_students = [s for s in s_list if s['minstry_score'] >= 75]
+        average_students = [s for s in s_list if 65 <= s['minstry_score'] < 75]
+        struggling_students = [s for s in s_list if s['minstry_score'] < 65]
 
         print(f"{school}: top={len(top_students)}, avg={len(average_students)}, struggle={len(struggling_students)}")
 
@@ -69,40 +71,36 @@ def assigns(students, num_sections) -> list[list[dict]]:
         # Assign round-robin while keeping gender balance
         category_lists = [top_students, average_students, struggling_students]
         idx = 0
+        # Assign round-robin while keeping gender balance
         for category in category_lists:
             for s in category:
-                attempts = 0
-                while students_per_section[idx % num_sections] <= 0:
-                    idx += 1
-                    attempts += 1
-                    if attempts > num_sections:
-                        error_log.append((s, "Could not assign to any section"))
-                        break
-                else:
-                    # Gender balancing check
-                    section = sections[idx % num_sections]
+                assigned = False
+                for _ in range(num_sections):  # try each section once
+                    idx_mod = idx % num_sections
+                    section = sections[idx_mod]
+
                     male_in_section = sum(1 for stu in section if stu['sex'] == 'm')
                     female_in_section = len(section) - male_in_section
                     total_in_section = len(section) + 1  # including this student
 
-                    # Check expected ratios
                     expected_male = male_ratio * total_in_section
                     expected_female = female_ratio * total_in_section
 
-                    if s['sex'].lower() == 'm' and male_in_section + 1 > expected_male + 1:
-                        # skip this section for now
+                    if (s['sex'].lower() == 'm' and male_in_section + 1 <= expected_male + 1) or \
+                    (s['sex'].lower() == 'f' and female_in_section + 1 <= expected_female + 1):
+                        section.append(s)
+                        students_per_section[idx_mod] -= 1
+                        assigned = True
                         idx += 1
-                        continue
-                    if s['sex'].lower() == 'f' and female_in_section + 1 > expected_female + 1:
-                        # skip this section for now
-                        idx += 1
-                        continue
-
-                    # Assign
-                    sections[idx % num_sections].append(s)
-                    students_per_section[idx % num_sections] -= 1
+                        break
                     idx += 1
 
+                # If not assigned due to strict ratio, just put them in the section with the least students
+                if not assigned:
+                    min_idx = min(range(num_sections), key=lambda i: len(sections[i]))
+                    sections[min_idx].append(s)
+                    students_per_section[min_idx] -= 1
+            
     if error_log:
         print("\nThe following errors occurred during assignment:")
         for item, msg in error_log:
@@ -110,4 +108,17 @@ def assigns(students, num_sections) -> list[list[dict]]:
 
     random.shuffle(sections)
     return sections
+
+def assign_and_save(model,num_section):
+    students = list(model.objects.all().values('id','student_name', 'previous_school', 'minstry_score', 'sex'))
+    sections = assigns(students,num_section)
+    
+    for idx, section_students in enumerate(sections):
+        section_name = chr(65+ idx)
+        for student in section_students:
+            model.objects.filter(id=student['id'],).update(section=section_name)
+        
+
+
+
 
