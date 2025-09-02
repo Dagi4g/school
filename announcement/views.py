@@ -30,22 +30,27 @@ class SectionAssignerView(FormView):
     template_name = "autograde/assigner.html"
     form_class = SectionInputForm
     success_url = 'list_students'
+    
 
     def form_valid(self, form):
         section_number = form.cleaned_data["section_number"]
-        assign_and_save(AutoSectionGrade,section_number)
-        result = f"Section {section_number} assigned successfully!"
+        stats = assign_and_save(AutoSectionGrade, section_number)
+        self.request.session['sections_stats'] = stats  # Store stats in session
         return super().form_valid(form)
+
+
+    
 
 def show_sections(request):
     # Get only students who have a section assigned
+    stats = request.session.get('sections_stats', {})
     sections = AutoSectionGrade.objects.exclude(section__isnull=True).exclude(section='').values('section', 'student_name', 'previous_school', 'minstry_score', 'sex').order_by('section')
     section_dict = {}
     for s in sections:
         section_dict.setdefault(s['section'], []).append(s)
+    print(stats)
         
-    print(len(section_dict))
-    return render(request, 'autograde/sections.html', {'section_dict': section_dict})
+    return render(request, 'autograde/sections.html', {'section_dict': section_dict,'stats': stats})
     
 def show_students_nosection(request):
     # Get only students who have no section assigned
@@ -55,6 +60,7 @@ def show_students_nosection(request):
     section_dict = {}
     for s in sections:
         section_dict.setdefault(s['section'], []).append(s)
+    
 
     return render(request, 'autograde/student_nosection.html', {'section_dict': section_dict, 'len_student': len_student})
     

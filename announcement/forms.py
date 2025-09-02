@@ -152,7 +152,7 @@ from django.core.exceptions import ValidationError
 class AutoSectionGradeForm(forms.ModelForm):
     class Meta:
         model = AutoSectionGrade
-        fields = '__all__'
+        fields = ['student_name','father_name','grandfather_name','age','sex','minstry_score','previous_school']
 
     def validate_unique(self,):
         try:
