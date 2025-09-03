@@ -103,7 +103,7 @@ class Student(models.Model):
 
     def __repr__(self):
         return super().__repr__()
-    
+
     
 class AutoSectionGrade(models.Model):
     student_name = models.CharField(max_length=225)    
