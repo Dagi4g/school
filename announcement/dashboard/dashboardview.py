@@ -20,7 +20,8 @@ from ..models import (Announcement,
                       Student,
                       Parent,
                       AcademicYear,
-                      Grade,Section)
+                      Grade,Section,
+                      AutoSectionGrade,)
 
 class DashBoard(LoginRequiredMixin, TemplateView):
     model = Announcement
@@ -287,24 +288,20 @@ class SectionLookUpView(FormView):
         father_name = form.cleaned_data['father_name']
         grand_father_name = form.cleaned_data['grand_father_name']
         grade = form.cleaned_data['grade']
-        current_academic_year = AcademicYear.objects.get(is_current=True)
         
         try :
-            student = Student.objects.get(
-                student_name__icontains=name.strip().title(),
-                father_name__icontains=father_name.strip().title(),
-                grand_father_name__icontains=grand_father_name.strip().title(),
-                section__grade__name=grade,
-                section__grade__academic_year=current_academic_year
-                
+            student = AutoSectionGrade.objects.get(
+                student_name=name.strip().title(),
+                father_name=father_name.strip().title(),
+                grandfather_name=grand_father_name.strip().title(),
             )
             return render(
                 self.request,
                 self.template_name,
                 {'section':student.section,'student':student,'form':form},
             )
-        except Student.DoesNotExist:
+        except AutoSectionGrade.DoesNotExist:
             return render(self.request,
                         self.template_name,
-                        {'error':f"Oops! We couldn’t locate a student with the information you provided for {grade}, {current_academic_year}. Please double-check and try again.",'form': form}
+                        {'error':f"Oops! We couldn’t locate a student with the information you provided for {grade}, . Please double-check and try again.",'form': form}
                         )

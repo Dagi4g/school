@@ -3,7 +3,7 @@ from django.views.generic import ListView,CreateView,DetailView,TemplateView,For
 from django.http import HttpResponse
 
 
-from .forms import AutoSectionGradeForm,SectionInputForm
+from .forms import AutoSectionGradeForm,SectionInputForm,StudentLookUpForm
 from .models import Announcement,AutoSectionGrade
 from .section_assign import assign_and_save
 
@@ -67,4 +67,30 @@ def show_students_nosection(request):
     
 
     return render(request, 'autograde/student_nosection.html', {'section_dict': section_dict, 'len_student': len_student})
+
+class SectionLookUpView(FormView):
+    template_name = 'students/section_lookup.html'
+    form_class = StudentLookUpForm
     
+    def form_valid(self,form):
+        name = form.cleaned_data['name']
+        father_name = form.cleaned_data['father_name']
+        grand_father_name = form.cleaned_data['grand_father_name']
+        grade = form.cleaned_data['grade']
+        
+        try :
+            student = AutoSectionGrade.objects.get(
+                student_name=name.strip().title(),
+                father_name=father_name.strip().title(),
+                grandfather_name=grand_father_name.strip().title(),
+            )
+            return render(
+                self.request,
+                self.template_name,
+                {'section':student.section,'student':student,'form':form},
+            )
+        except AutoSectionGrade.DoesNotExist:
+            return render(self.request,
+                        self.template_name,
+                        {'error':f"Oops! We couldn’t locate a student with the information you provided for {grade}, . Please double-check and try again.",'form': form}
+                        )

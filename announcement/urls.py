@@ -10,6 +10,8 @@ user_urls = [
     path("", views.home, name="home"),
     path("announcements/", views.AnnouncementListView.as_view(), name="announcement_list"),
     path("about_us/", views.about_us, name="about_us"),
+    path('look_up/',views.SectionLookUpView.as_view(),name='lookup'),
+
 
 ]
 
@@ -19,7 +21,8 @@ dashboard_urls = [
     path("show_announcement/", dashboardview.DashboardAnnouncementListView.as_view(template_name='dashboard/announcements/show_announcement.html'), name="show_announcement"),
     path("update_announcement/<int:pk>/", dashboardview.AnnouncementUpdateView.as_view(), name="update_announcement"),
     path("announcement_detail/<int:pk>/", dashboardview.AnnouncementDetailView.as_view(), name="announcement_detail"),
-    path("delete_announcement/<int:pk>/", dashboardview.AnnouncementDeleteView.as_view(), name="delete_announcement"),
+    path("delete_announcement/<int:pk>/", dashboardview.AnnouncementDeleteView.as_view(), name="delete_announcement"),    path('look_up/',views.SectionLookUpView.as_view(),name='lookup'),
+
 ]
 
 urlpatterns = [
@@ -27,7 +30,6 @@ urlpatterns = [
     path('autograde_create',views.AutoGradeSectionCreateView.as_view(),name='autograde_create'),
     path('student_nosection',views.show_students_nosection,name='student_nosection'),
     path('list_students',views.show_sections,name='show_sections'),
-    path('look_up/',dashboardview.SectionLookUpView.as_view(),name='lookup'),
     
     # the school dashboard.
     
