@@ -36,6 +36,8 @@ def assigns(students, num_sections) -> list[list[dict]]:
 
     # Global gender ratio
     total_students = len(students)
+    if total_students == 0:
+        raise ValueError("no student in the database")
     male_count = sum(1 for s in students if s.get('sex') == 'm')
     female_count = total_students - male_count
     male_ratio = male_count / total_students
@@ -161,7 +163,7 @@ def assign_and_save(model,num_section):
         model: The Django model representing students.
         num_section: The number of sections to assign students to.
     """
-    if not issubclass(model,AutosectionGrade):
+    if not issubclass(model,AutoSectionGrade):
         raise ImproperlyConfigured("assign_and_save function expects the AutoSectionGrade model.")
     students = list(model.objects.all().values('id','student_name', 'previous_school', 'minstry_score', 'sex'))
     sections, stats = assigns(students,num_section)

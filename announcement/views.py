@@ -34,8 +34,12 @@ class SectionAssignerView(FormView):
 
     def form_valid(self, form):
         section_number = form.cleaned_data["section_number"]
-        stats = assign_and_save(AutoSectionGrade, section_number)
-        self.request.session['sections_stats'] = stats  # Store stats in session
+        try:
+            stats = assign_and_save(AutoSectionGrade, section_number)
+            self.request.session['sections_stats'] = stats  # Store stats in session
+        except Exception as e:
+            form.add_error(None, f"{e}")
+            return super().form_invalid(form)
         return super().form_valid(form)
 
 

@@ -163,4 +163,4 @@ class AutoSectionGradeForm(forms.ModelForm):
 
 
 class SectionInputForm(forms.Form):
-    section_number = forms.IntegerField(label="Enter Section Number")
+    section_number = forms.IntegerField(label="Enter Number of sections")
