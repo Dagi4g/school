@@ -26,7 +26,7 @@ dashboard_urls = [
 ]
 
 urlpatterns = [
-    path('assign',views.SectionAssignerView.as_view(),name='assign'),
+    path('assign',dashboardview.SectionAssignerView.as_view(),name='assign'),
     path('autograde_create',views.AutoGradeSectionCreateView.as_view(),name='autograde_create'),
     path('student_nosection',views.show_students_nosection,name='student_nosection'),
     path('list_students',views.show_sections,name='show_sections'),

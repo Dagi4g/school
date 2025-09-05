@@ -26,21 +26,6 @@ class AutoGradeSectionCreateView(CreateView):
     success_url = 'student_nosection'
 
 
-class SectionAssignerView(FormView):
-    template_name = "autograde/assigner.html"
-    form_class = SectionInputForm
-    success_url = 'list_students'
-    
-
-    def form_valid(self, form):
-        section_number = form.cleaned_data["section_number"]
-        try:
-            stats = assign_and_save(AutoSectionGrade, section_number)
-            self.request.session['sections_stats'] = stats  # Store stats in session
-        except Exception as e:
-            form.add_error(None, f"{e}")
-            return super().form_invalid(form)
-        return super().form_valid(form)
 
 
     

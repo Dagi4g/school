@@ -15,6 +15,7 @@ from ..forms import (AnnouncementManagementForm,
                      AcademicYearForm,
                      ParentForm,
                      StudentLookUpForm,
+                     SectionInputForm,
                      )
 from ..models import (Announcement,
                       Student,
@@ -22,6 +23,8 @@ from ..models import (Announcement,
                       AcademicYear,
                       Grade,Section,
                       AutoSectionGrade,)
+
+from ..section_assign import assign_and_save
 
 class DashBoard(LoginRequiredMixin, TemplateView):
     model = Announcement
@@ -59,7 +62,7 @@ class AnnouncementDeleteView(LoginRequiredMixin, DeleteView):
     success_url = '/show_announcement/'
 
 '''student management view'''
-
+""" this code is fore dashbard student managment but it will be used withe digital is system """
 class GeneralStudentListView(LoginRequiredMixin, ListView):
     model = Student
     template_name = 'dashboard/general_studentslist.html'
@@ -79,6 +82,8 @@ class GeneralStudentListView(LoginRequiredMixin, ListView):
         context['academic_year'] = academic_year
         return context
 
+
+
 class AcademicYearListView(LoginRequiredMixin, ListView):
     model = AcademicYear
     template_name = 'dashboard/academic_year/show_academic_years.html'
@@ -94,7 +99,6 @@ class AcademicYearCreateView(LoginRequiredMixin, CreateView):
     form_class = AcademicYearForm
     template_name = 'dashboard/academic_year/create_academic_year.html'
     success_url = '/academic_years/'
-    
     
 
 # grade related view.
@@ -279,29 +283,21 @@ class StudentParentCreateView(TemplateView):
         }
         return render(request, self.template_name, context)
 
-class SectionLookUpView(FormView):
-    template_name = 'students/section_lookup.html'
-    form_class = StudentLookUpForm
+
+class SectionAssignerView(FormView):
+    template_name = "autograde/assigner.html"
+    form_class = SectionInputForm
+    success_url = 'list_students'
     
-    def form_valid(self,form):
-        name = form.cleaned_data['name']
-        father_name = form.cleaned_data['father_name']
-        grand_father_name = form.cleaned_data['grand_father_name']
-        grade = form.cleaned_data['grade']
-        
-        try :
-            student = AutoSectionGrade.objects.get(
-                student_name=name.strip().title(),
-                father_name=father_name.strip().title(),
-                grandfather_name=grand_father_name.strip().title(),
-            )
-            return render(
-                self.request,
-                self.template_name,
-                {'section':student.section,'student':student,'form':form},
-            )
-        except AutoSectionGrade.DoesNotExist:
-            return render(self.request,
-                        self.template_name,
-                        {'error':f"Oops! We couldn’t locate a student with the information you provided for {grade}, . Please double-check and try again.",'form': form}
-                        )
+
+    def form_valid(self, form):
+        section_number = form.cleaned_data["section_number"]
+        try:
+            assign_and_save(AutoSectionGrade, section_number)
+            from ..models import AutoGradeStat
+            stat_obj, created = AutoGradeStat.objects.get_or_create(id=1)
+            self.request.session['sections_stats'] =  stat_obj.stats # Store stats in session
+        except Exception as e:
+            form.add_error(None, f"{e}")
+            return super().form_invalid(form)
+        return super().form_valid(form)

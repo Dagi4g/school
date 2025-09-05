@@ -104,7 +104,12 @@ class Student(models.Model):
     def __repr__(self):
         return super().__repr__()
 
+class AutoGradeStat(models.Model):
+    id = models.PositiveIntegerField(primary_key=True, default=1, editable=False)
+    stats = models.JSONField(null=True, blank=True)
     
+
+
 class AutoSectionGrade(models.Model):
     student_name = models.CharField(max_length=225)    
     father_name = models.CharField(max_length=225)    
@@ -125,7 +130,9 @@ class AutoSectionGrade(models.Model):
     )
     section  = models.CharField(max_length=20,null=True,blank=True)
     grade = models.CharField(max_length=20,choices=[('grade 9','Grade 9'),('grade 10','Grade 10'),('grade 11','Grade 11'),('grade 12','Grade 12')])
-    
+    stats = models.ForeignKey(AutoGradeStat,on_delete=models.CASCADE,null=True, blank=True)
+
+
     class Meta:
         constraints = [
             models.UniqueConstraint(

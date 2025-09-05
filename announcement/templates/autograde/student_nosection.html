@@ -7,6 +7,7 @@
 <div class="container mt-4">
   <h1 class="text-center mb-4">Student Section Assignments</h1>
   <div class="col-md-3">
+    {% if len_students == 0 %}
       <a href="{% url 'chencha:assign' %}" class="text-decoration-none">
         <div class="card shadow-lg border-0 rounded-4 h-10 text-center">
           <div class="card-body p-2">
@@ -18,7 +19,20 @@
           </div>
           
         </a>
-      </div>
+      {% else %}
+            <a href="{% url 'chencha:show_sections' %}" class="text-decoration-none">
+        <div class="card shadow-lg border-0 rounded-4 h-10 text-center">
+          <div class="card-body p-2">
+              <div class="mb-3">
+                <i class="bi bi-people-fill fs-1 text-primary"></i>
+              </div>
+              <h5 class="fw-bold text-dark">assign sections</h5>
+            </div>
+          </div>
+          
+        </a>
+      {% endif %}
+    </div>
     <div class="col-md-3">
       <a href="{% url 'chencha:autograde_create' %}" class="text-decoration-none">
         <div class="card shadow-lg border-0 rounded-4 h-10 text-center">

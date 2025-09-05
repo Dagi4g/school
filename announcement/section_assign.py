@@ -1,157 +1,168 @@
 import random
-from collections import defaultdict
+import string
+from collections import defaultdict, Counter
 from django.core.exceptions import ImproperlyConfigured
 from .models import AutoSectionGrade
 
-def assigns(students, num_sections) -> list[list[dict]]:
-    """
-    Assign students to sections based on:
-    1. School ratio
-    2. Performance categories (Top / Average / Struggling)
-    3. Gender balance (softly, not strict)
-    
-    Prints assignment info in terminal.
-    """
-    if not isinstance(students, list):
-        raise TypeError("students must be a list of dictionaries")
-    if num_sections <= 0:
-        raise ValueError("num_sections must be greater than 0")
 
-    sections = [[] for _ in range(num_sections)]
-    unassigned_students = []
+class SectionAssigner:
+    def __init__(self, students: list[dict], num_sections: int):
+        if not isinstance(students, list):
+            raise TypeError("students must be a list of dictionaries")
+        if not isinstance(num_sections, int):
+            raise TypeError("number of sections must be an integer")
+        if num_sections <= 0:
+            raise ValueError("number ofsections must be greater than 0")
 
-    # Group students by school
-    school_groups = defaultdict(list)
-    for s in students:
-        if 'previous_school' not in s or 'minstry_score' not in s or 'sex' not in s:
-            unassigned_students.append(s)
-            continue
-        school_groups[s['previous_school']].append(s)
+        self.students = students
+        self.num_sections = num_sections
+        self.sections = [[] for _ in range(num_sections)]
+        self.unassigned_students = []
+        self.school_groups = defaultdict(list)
+        self.stats = {}
 
-    # Shuffle each school's students for randomness
-    for school in school_groups:
-        random.shuffle(school_groups[school])
-        school_ratio = len(school_groups[school]) / len(students)
-        print(f'[INFO] School: {school} - {len(school_groups[school])} students ({school_ratio*100:.2f}%)')
+    def group_by_school(self):
+        for s in self.students:
+            if 'previous_school' not in s or 'minstry_score' not in s or 'sex' not in s:
+                self.unassigned_students.append(s)
+                continue
+            self.school_groups[s['previous_school']].append(s)
 
-    # Global gender ratio
-    total_students = len(students)
-    if total_students == 0:
-        raise ValueError("no student in the database")
-    male_count = sum(1 for s in students if s.get('sex') == 'm')
-    female_count = total_students - male_count
-    male_ratio = male_count / total_students
-    female_ratio = female_count / total_students
-    print(f'[INFO] Total students: {total_students} | Males: {male_count} ({male_ratio*100:.2f}%) | Females: {female_count} ({female_ratio*100:.2f}%)\n')
+        for school in self.school_groups:
+            random.shuffle(self.school_groups[school])
+            ratio = len(self.school_groups[school]) / len(self.students)
+            print(f'[INFO] School: {school} - {len(self.school_groups[school])} students ({ratio*100:.2f}%)')
 
-    # Assign students category by category
-    for school, s_list in school_groups.items():
-        top_students = [s for s in s_list if s['minstry_score'] >= 75]
-        average_students = [s for s in s_list if 65 <= s['minstry_score'] < 75]
-        struggling_students = [s for s in s_list if s['minstry_score'] < 65]
+    def calculate_gender_ratio(self):
+        total_students = len(self.students)
+        if total_students == 0:
+            raise ValueError("no student in the database or all student have been assigned a section")
 
-        print(f'[INFO] Assigning students from school: {school}')
-        print(f'  Top: {len(top_students)}, Average: {len(average_students)}, Struggling: {len(struggling_students)}')
+        male_count = sum(1 for s in self.students if s.get('sex') == 'm')
+        female_count = total_students - male_count
+        male_ratio = male_count / total_students
+        female_ratio = female_count / total_students
 
-        for category_name, category in zip(['Top', 'Average', 'Struggling'], [top_students, average_students, struggling_students]):
-            for s in category:
-                idx = min(range(num_sections), key=lambda i: len(sections[i]))
-                section = sections[idx]
-                male_in_section = sum(1 for stu in section if stu['sex'] == 'm')
-                female_in_section = len(section) - male_in_section
-                total_in_section = len(section) + 1
+        print(f'[INFO] Total students: {total_students} | '
+            f'Males: {male_count} ({male_ratio*100:.2f}%) | '
+            f'Females: {female_count} ({female_ratio*100:.2f}%)\n')
 
-                expected_male = male_ratio * total_in_section
-                expected_female = female_ratio * total_in_section
+        return total_students, male_count, female_count, male_ratio, female_ratio
 
-                # Only skip if it drastically violates ratio, otherwise assign
-                if s['sex'].lower() == 'm' and male_in_section + 1 > expected_male + 1:
-                    idx = min(range(num_sections), key=lambda i: len(sections[i]))
-                if s['sex'].lower() == 'f' and female_in_section + 1 > expected_female + 1:
-                    idx = min(range(num_sections), key=lambda i: len(sections[i]))
+    def assign_students(self):
+        total_students, male_count, female_count, male_ratio, female_ratio = self.calculate_gender_ratio()
 
-                sections[idx].append(s)
+        for school, s_list in self.school_groups.items():
+            # Safely categorize students, defaulting to "unscored"
+            top = [s for s in s_list if s.get('minstry_score') is not None and s['minstry_score'] >= 75]
+            avg = [s for s in s_list if s.get('minstry_score') is not None and 65 <= s['minstry_score'] < 75]
+            strug = [s for s in s_list if s.get('minstry_score') is not None and s['minstry_score'] < 65]
+            unscored = [s for s in s_list if s.get('minstry_score') is None]
 
-    # Any unassigned students (missing data) go to sections with least students
-    if unassigned_students:
-        print(f'\n[WARNING] {len(unassigned_students)} students missing required info. Assigning them to smallest sections.')
-        for s in unassigned_students:
-            idx = min(range(num_sections), key=lambda i: len(sections[i]))
-            sections[idx].append(s)
+            print(f'[INFO] Assigning students from school: {school}')
+            print(f'  Top: {len(top)}, Average: {len(avg)}, Struggling: {len(strug)}, Unscored: {len(unscored)}')
 
-    # Shuffle sections for randomness
-    for sec in sections:
-        random.shuffle(sec)
-    random.shuffle(sections)
+            # Assign students per category
+            for category_name, category in zip(
+                ['Top', 'Average', 'Struggling', 'Unscored'],
+                [top, avg, strug, unscored]
+            ):
+                for s in category:
+                    idx = min(range(self.num_sections), key=lambda i: len(self.sections[i]))
+                    section = self.sections[idx]
 
-    import string
-    from collections import Counter
+                    male_in_sec = sum(1 for stu in section if stu.get('sex') == 'm')
+                    female_in_sec = len(section) - male_in_sec
+                    total_in_sec = len(section) + 1
 
-    print('\n[INFO] Final Section Distribution:')
-    alphabet = string.ascii_uppercase
-    for i, sec in enumerate(sections):
-        male_sec = sum(1 for s in sec if s.get('sex') == 'm')
-        female_sec = len(sec) - male_sec
+                    expected_male = male_ratio * total_in_sec
+                    expected_female = female_ratio * total_in_sec
 
-        top_sec = sum(1 for s in sec if s.get('minstry_score', 0) >= 75)
-        avg_sec = sum(1 for s in sec if 65 <= s.get('minstry_score', 0) < 75)
-        strug_sec = sum(1 for s in sec if s.get('minstry_score', 0) < 65)
+                    if s.get('sex', '').lower() == 'm' and male_in_sec + 1 > expected_male + 1:
+                        idx = min(range(self.num_sections), key=lambda i: len(self.sections[i]))
+                    if s.get('sex', '').lower() == 'f' and female_in_sec + 1 > expected_female + 1:
+                        idx = min(range(self.num_sections), key=lambda i: len(self.sections[i]))
 
-        section_label = alphabet[i] if i < len(alphabet) else f"Sec{i+1}"
-        print(
-            f'\n  Section {section_label}: {len(sec)} students | '
-            f'Males: {male_sec} ({male_sec/len(sec)*100:.2f}%), '
-            f'Females: {female_sec} ({female_sec/len(sec)*100:.2f}%) | '
-            f'Top: {top_sec}, Avg: {avg_sec}, Struggling: {strug_sec}'
-        )
+                    self.sections[idx].append(s)
 
-        # Calculate school ratios inside this section
-        schools_in_sec = [s.get('previous_school', 'Unknown') for s in sec]
-        school_counts = Counter(schools_in_sec)
-        for school, count in school_counts.items():
-            ratio = (count / len(sec)) * 100
-            print(f'    {school}: {count} ({ratio:.2f}%)')
-            
-        from collections import Counter
+        if self.unassigned_students:
+            print(f'\n[WARNING] {len(self.unassigned_students)} students missing required info. Assigning them to smallest sections.')
+            for s in self.unassigned_students:
+                idx = min(range(self.num_sections), key=lambda i: len(self.sections[i]))
+                self.sections[idx].append(s)
 
-        # Prepare statistics
+        for sec in self.sections:
+            random.shuffle(sec)
+        random.shuffle(self.sections)
+
+
+    def calculate_statistics(self):
+        total_students = len(self.students)
+        male_count = sum(1 for s in self.students if s.get('sex') == 'm')
+        female_count = total_students - male_count
+        male_ratio = round(100 * male_count / total_students, 2) if total_students else 0
+        female_ratio = round(100 * female_count / total_students, 2) if total_students else 0
+
         stats = {
             "total_students": total_students,
-            "total_sections": num_sections,
-            "gender_ratio": {"male": male_count, "female": female_count, 'male_ratio': round(100*male_ratio, 2), 'female_ratio': round(100*female_ratio, 2)},
-            "school_counts": {school: {'count': len(students), 'ratio': round((len(students) / total_students) * 100, 2)} for school, students in school_groups.items()},
+            "total_sections": self.num_sections,
+            "gender_ratio": {
+                "male": male_count,
+                "female": female_count,
+                "male_ratio": male_ratio,
+                "female_ratio": female_ratio
+            },
+            "school_counts": {
+                school: {
+                    'count': len(students),
+                    'ratio': round((len(students) / total_students) * 100, 2) if total_students else 0
+                }
+                for school, students in self.school_groups.items()
+            },
             "sections": {}
         }
 
-        alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        alphabet = string.ascii_uppercase
+        for i, sec in enumerate(self.sections):
+            label = alphabet[i] if i < len(alphabet) else f"Sec{i+1}"
 
-        for i, sec in enumerate(sections):
-            section_label = alphabet[i] if i < len(alphabet) else f"Sec{i+1}"
             male_sec = sum(1 for s in sec if s.get('sex') == 'm')
             female_sec = len(sec) - male_sec
-            top_sec = sum(1 for s in sec if s.get('minstry_score', 0) >= 75)
-            avg_sec = sum(1 for s in sec if 65 <= s.get('minstry_score', 0) < 75)
-            strug_sec = sum(1 for s in sec if s.get('minstry_score', 0) < 65)
+            top_sec = sum(1 for s in sec if s.get('minstry_score') is not None and s['minstry_score'] >= 75)
+            avg_sec = sum(1 for s in sec if s.get('minstry_score') is not None and 65 <= s['minstry_score'] < 75)
+            strug_sec = sum(1 for s in sec if s.get('minstry_score') is not None and s['minstry_score'] < 65)
+            unscored_sec = sum(1 for s in sec if s.get('minstry_score') is None)
+            school_counts = Counter([s.get('previous_school', 'Unknown') for s in sec])
 
-            schools_in_sec = [s.get('previous_school', 'Unknown') for s in sec]
-            school_counts = Counter(schools_in_sec)
-
-            stats["sections"][section_label] = {
+            stats["sections"][label] = {
                 "total": len(sec),
                 "males": male_sec,
                 "females": female_sec,
                 "top": top_sec,
                 "average": avg_sec,
                 "struggling": strug_sec,
+                "unscored": unscored_sec,
                 "schools": dict(school_counts),
-                "school_ratios": {school: round((count / len(sec)) * 100, 2) for school, count in school_counts.items()},
-                'gender_ratio': {
-                    'male_ratio': round((male_sec / len(sec)) * 100, 2),
-                    'female_ratio': round((female_sec / len(sec)) * 100, 2)
+                "school_ratios": {
+                    school: round((count / len(sec)) * 100, 2) if len(sec) else 0
+                    for school, count in school_counts.items()
+                },
+                "gender_ratio": {
+                    "male_ratio": round((male_sec / len(sec)) * 100, 2) if len(sec) > 0 else 0,
+                    "female_ratio": round((female_sec / len(sec)) * 100, 2) if len(sec) > 0 else 0
                 }
             }
 
-    return sections,stats
+        self.stats = stats
+        return stats
+
+
+    def run(self):
+        self.group_by_school()
+        self.assign_students()
+        stats = self.calculate_statistics()
+        return self.sections, stats
+
 
 
 def assign_and_save(model,num_section):
@@ -165,14 +176,20 @@ def assign_and_save(model,num_section):
     """
     if not issubclass(model,AutoSectionGrade):
         raise ImproperlyConfigured("assign_and_save function expects the AutoSectionGrade model.")
-    students = list(model.objects.all().values('id','student_name', 'previous_school', 'minstry_score', 'sex'))
-    sections, stats = assigns(students,num_section)
-
+    students = list(model.objects.all().exclude(section__isnull=False).values('id','student_name', 'previous_school', 'minstry_score', 'sex'))
+    
+    assigner = SectionAssigner(students, num_sections=num_section)
+    sections, stats = assigner.run()
+    
+    from .models import AutoGradeStat
+    
+    stat_obj, created = AutoGradeStat.objects.get_or_create(id=1)
+    stat_obj.stats = stats
+    stat_obj.save()
     for idx, section_students in enumerate(sections):
         section_name = chr(65+ idx)
         for student in section_students:
-            model.objects.filter(id=student['id']).update(section=section_name)
-    return stats
+            model.objects.filter(id=student['id']).update(section=section_name, stats=stat_obj)
 
 
 
