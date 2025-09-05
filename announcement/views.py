@@ -83,14 +83,22 @@ class SectionLookUpView(FormView):
                 student_name=name.strip().title(),
                 father_name=father_name.strip().title(),
                 grandfather_name=grand_father_name.strip().title(),
+                grade=grade.strip()
             )
-            return render(
+            if student.section:
+                return render(
                 self.request,
                 self.template_name,
                 {'section':student.section,'student':student,'form':form},
             )
+            else:
+                return render(
+                    self.request,
+                    self.template_name,
+                    {'student_has_no_section':'ይህ ተማር ትመዝግባል ነገር ግን ክፍል አልተሰጠዉም። እባክህ አስተዳደሩን ያነጋግሩ።','form':form},
+                )
         except AutoSectionGrade.DoesNotExist:
             return render(self.request,
                         self.template_name,
-                        {'error':f"Oops! We couldn’t locate a student with the information you provided for {grade}, . Please double-check and try again.",'form': form}
+                        {'error':f"ውይ! ከ {grade[6:]} ክፍል ያቀረቡትን መረጃ የያዘ ተማሪ ማግኘት አልቻልንም። እባክህ ደግመህ አረጋግጥ እና እንደገና ሞክር።", 'form': form}
                         )

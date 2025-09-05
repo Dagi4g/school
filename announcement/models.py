@@ -113,16 +113,18 @@ class AutoSectionGrade(models.Model):
     sex_choice = [('m','M'),('f','F')]
     sex = models.CharField(max_length=10,choices=sex_choice)
     school_choice = [('junior','Junior'),('chafe','Chafe'),('tolola','Tolola'),('masho','Masho'),('lela','lela'),('betel','Betel')]
-    previous_school = models.CharField(max_length=225,choices=school_choice)
+    previous_school = models.CharField(max_length=225,choices=school_choice,null=True,blank=True)
     score_choice = [(i,i) for i in range(50,101)]
     minstry_score = models.PositiveIntegerField(
         validators=[
             MinValueValidator(50),
             MaxValueValidator(100)
         ],
-        choices=score_choice
+        choices=score_choice,
+        null=True,blank=True
     )
     section  = models.CharField(max_length=20,null=True,blank=True)
+    grade = models.CharField(max_length=20,choices=[('grade 9','Grade 9'),('grade 10','Grade 10'),('grade 11','Grade 11'),('grade 12','Grade 12')])
     
     class Meta:
         constraints = [

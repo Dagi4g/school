@@ -4,10 +4,14 @@
 {% block content %}
 
 <div class="container my-5">
+    <div class="breadcrumb-custom mb-4 shadow-sm text-white">
+        <a href="{% url 'chencha:home' %}">ዋና ገጽ</a> /
+        <a href="{% url 'chencha:lookup' %}">ክፍልህን ለማየት</a>
+    </div>
     <!-- Page Header -->
     <div class="text-center mb-4">
-        <h2 class="fw-bold">Student Lookup</h2>
-        <p class="text-muted">Enter your full name to see your section instantly</p>
+        <h2 class="fw-bold">ክፍልህን ለማየት</h2>
+        <p class="text-muted"> እባክዎ ሙሉ ስምዎን ያግቡ </p>
     </div>
 
     <!-- Lookup Form -->
@@ -30,12 +34,16 @@
         <div class="col-md-6">
             {% if section %}
                 <div class="alert alert-success text-center shadow-sm" role="alert">
-                    <h4 class="alert-heading">Student Section</h4>
-                    <p class="mb-0">{{ section }}</p>
+                    <h4 class="alert-heading">የተማሪው ክፍል</h4>
+                    <p class="mb-0">{{ section }}   ነው።</p>
                 </div>
             {% elif error %}
                 <div class="alert alert-danger text-center shadow-sm" role="alert">
                     {{ error }}
+                </div>
+            {% elif student_has_no_section %}
+                <div class="alert alert-warning text-center shadow-sm" role="alert">
+                    {{ student_has_no_section }}
                 </div>
 
             {% endif %}
