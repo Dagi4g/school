@@ -98,7 +98,7 @@ class SectionAssigner:
 
     def calculate_statistics(self):
         total_students = len(self.students)
-        male_count = sum(1 for s in self.students if s.get('sex') == 'm')
+        male_count = sum(1 for s in self.students if s.get('sex').lower() == 'm')
         female_count = total_students - male_count
         male_ratio = round(100 * male_count / total_students, 2) if total_students else 0
         female_ratio = round(100 * female_count / total_students, 2) if total_students else 0
@@ -126,7 +126,7 @@ class SectionAssigner:
         for i, sec in enumerate(self.sections):
             label = alphabet[i] if i < len(alphabet) else f"Sec{i+1}"
 
-            male_sec = sum(1 for s in sec if s.get('sex') == 'm')
+            male_sec = sum(1 for s in sec if s.get('sex').lower() == 'm')
             female_sec = len(sec) - male_sec
             top_sec = sum(1 for s in sec if s.get('minstry_score') is not None and s['minstry_score'] >= 75)
             avg_sec = sum(1 for s in sec if s.get('minstry_score') is not None and 65 <= s['minstry_score'] < 75)
@@ -165,7 +165,7 @@ class SectionAssigner:
 
 
 
-def assign_and_save(model,num_section):
+def assign_and_save(model,num_section,students):
     """Assigns students from the given model to sections and updates their section assignment in the database.
 
     Retrieves all students, assigns them to sections using the assigns function, and updates each student's section field in the database.
@@ -176,7 +176,6 @@ def assign_and_save(model,num_section):
     """
     if not issubclass(model,AutoSectionGrade):
         raise ImproperlyConfigured("assign_and_save function expects the AutoSectionGrade model.")
-    students = list(model.objects.all().exclude(section__isnull=False).values('id','student_name', 'previous_school', 'minstry_score', 'sex'))
     
     assigner = SectionAssigner(students, num_sections=num_section)
     sections, stats = assigner.run()

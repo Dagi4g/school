@@ -33,7 +33,7 @@ class AutoGradeSectionCreateView(CreateView):
 def show_sections(request):
     # Get only students who have a section assigned
     stats = request.session.get('sections_stats', {})
-    sections = AutoSectionGrade.objects.exclude(section__isnull=True).exclude(section='').values('section', 'student_name', 'previous_school', 'minstry_score', 'sex').order_by('section')
+    sections = AutoSectionGrade.objects.exclude(section__isnull=True).exclude(section='').values('section', 'student_name', 'father_name', 'grandfather_name', 'previous_school', 'sex').order_by('section')
     section_dict = {}
     for s in sections:
         section_dict.setdefault(s['section'], []).append(s)
@@ -43,15 +43,15 @@ def show_sections(request):
     
 def show_students_nosection(request):
     # Get only students who have no section assigned
-    sections = AutoSectionGrade.objects.filter(section__isnull=True).values('section', 'student_name', 'previous_school', 'minstry_score', 'sex').order_by('student_name')
-
-    len_student = len(sections)
+    student_data = AutoSectionGrade.objects.filter(section__isnull=True).values('id','section', 'student_name','father_name', 'grandfather_name', 'previous_school', 'sex','section','grade').order_by('student_name')
+    request.session['students_nosection'] = list(student_data)  # Store in session for later use
+    len_student = len(student_data)
     section_dict = {}
-    for s in sections:
+    for s in student_data:
         section_dict.setdefault(s['section'], []).append(s)
     
 
-    return render(request, 'autograde/student_nosection.html', {'section_dict': section_dict, 'len_student': len_student})
+    return render(request, 'autograde/student_nosection.html', {'section_dict': section_dict, 'len_student': len_student,})
 
 class SectionLookUpView(FormView):
     template_name = 'students/section_lookup.html'
@@ -68,7 +68,7 @@ class SectionLookUpView(FormView):
                 student_name=name.strip().title(),
                 father_name=father_name.strip().title(),
                 grandfather_name=grand_father_name.strip().title(),
-                grade=grade.strip()
+                grade=grade.strip().title()
             )
             if student.section:
                 return render(

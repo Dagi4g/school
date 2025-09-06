@@ -284,7 +284,7 @@ class StudentParentCreateView(TemplateView):
         return render(request, self.template_name, context)
 
 
-class SectionAssignerView(FormView):
+class SectionAssignerView(FormView, LoginRequiredMixin):
     template_name = "autograde/assigner.html"
     form_class = SectionInputForm
     success_url = 'list_students'
@@ -292,8 +292,10 @@ class SectionAssignerView(FormView):
 
     def form_valid(self, form):
         section_number = form.cleaned_data["section_number"]
+        student_data = self.request.session.get('students_nosection', [])        
+        print(student_data)
         try:
-            assign_and_save(AutoSectionGrade, section_number)
+            assign_and_save(model=AutoSectionGrade,num_section=section_number, students=student_data)
             from ..models import AutoGradeStat
             stat_obj, created = AutoGradeStat.objects.get_or_create(id=1)
             self.request.session['sections_stats'] =  stat_obj.stats # Store stats in session
