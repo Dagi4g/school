@@ -303,3 +303,41 @@ class SectionAssignerView(FormView, LoginRequiredMixin):
             form.add_error(None, f"{e}")
             return super().form_invalid(form)
         return super().form_valid(form)
+
+from django.http import HttpResponse
+import docx
+from collections import defaultdict
+
+from ..to_word import mark_list_in_word, write_to_word_section
+def download_sections(request):
+    document = write_to_word_section()
+
+    # Save to in-memory file
+    from io import BytesIO
+    buffer = BytesIO()
+    document.save(buffer)
+    buffer.seek(0)
+
+    # Send response
+    response = HttpResponse(
+        buffer.getvalue(),
+        content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    )
+    response['Content-Disposition'] = 'attachment; filename="student_sections.docx"'
+    return response
+def download_mark_list(request):
+    document = mark_list_in_word()
+
+    # Save to in-memory file
+    from io import BytesIO
+    buffer = BytesIO()
+    document.save(buffer)
+    buffer.seek(0)
+
+    # Send response
+    response = HttpResponse(
+        buffer.getvalue(),
+        content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    )
+    response['Content-Disposition'] = 'attachment; filename="grade 9 marklist.docx"'
+    return response

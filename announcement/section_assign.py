@@ -114,7 +114,7 @@ class SectionAssigner:
             },
             "school_counts": {
                 school: {
-                    'count': len(students),
+                    'count': len(total_students),
                     'ratio': round((len(students) / total_students) * 100, 2) if total_students else 0
                 }
                 for school, students in self.school_groups.items()

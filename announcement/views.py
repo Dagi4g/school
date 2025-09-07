@@ -33,7 +33,7 @@ class AutoGradeSectionCreateView(CreateView):
 def show_sections(request):
     # Get only students who have a section assigned
     stats = request.session.get('sections_stats', {})
-    sections = AutoSectionGrade.objects.exclude(section__isnull=True).exclude(section='').values('section', 'student_name', 'father_name', 'grandfather_name', 'previous_school', 'sex').order_by('section')
+    sections = AutoSectionGrade.objects.exclude(section__isnull=True).exclude(section='').values('section', 'student_name', 'father_name', 'grandfather_name', 'previous_school', 'sex').order_by('section','student_name')
     section_dict = {}
     for s in sections:
         section_dict.setdefault(s['section'], []).append(s)

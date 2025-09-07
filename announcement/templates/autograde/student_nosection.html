@@ -7,14 +7,14 @@
 <div class="container mt-4">
   <h1 class="text-center mb-4">Student Section Assignments</h1>
   <div class="col-md-3">
-    {% if len_students == 0 %}
+    {% if len_student == 0 %}
       <a href="{% url 'chencha:show_sections' %}" class="text-decoration-none">
         <div class="card shadow-lg border-0 rounded-4 h-10 text-center">
           <div class="card-body p-2">
               <div class="mb-3">
                 <i class="bi bi-people-fill fs-1 text-primary"></i>
               </div>
-              <h5 class="fw-bold text-dark">assign sections</h5>
+              <h5 class="fw-bold text-dark">watch assigned students</h5>
             </div>
           </div>
           
@@ -47,14 +47,6 @@
       </a>
     </div>
   <h5 class="text-center mb-4">Total Students without Section: {{ len_student }}</h5>
-  {% if messages %}
-    {% for message in messages %}
-      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-        {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-    {% endfor %}
-  {% endif %}
 
   {% for section, students in section_dict.items %}
     <div class=" mb-4">
