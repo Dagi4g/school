@@ -23,9 +23,9 @@ class SectionAssigner:
 
     def group_by_school(self):
         for s in self.students:
-            if 'previous_school' not in s or 'minstry_score' not in s or 'sex' not in s:
+            if 'previous_school' not in s or 'sex' not in s:
                 self.unassigned_students.append(s)
-                continue
+                continue 
             self.school_groups[s['previous_school']].append(s)
 
         for school in self.school_groups:
@@ -53,14 +53,15 @@ class SectionAssigner:
         total_students, male_count, female_count, male_ratio, female_ratio = self.calculate_gender_ratio()
 
         for school, s_list in self.school_groups.items():
+            
             # Safely categorize students, defaulting to "unscored"
             top = [s for s in s_list if s.get('minstry_score') is not None and s['minstry_score'] >= 75]
             avg = [s for s in s_list if s.get('minstry_score') is not None and 65 <= s['minstry_score'] < 75]
             strug = [s for s in s_list if s.get('minstry_score') is not None and s['minstry_score'] < 65]
             unscored = [s for s in s_list if s.get('minstry_score') is None]
 
-            print(f'[INFO] Assigning students from school: {school}')
-            print(f'  Top: {len(top)}, Average: {len(avg)}, Struggling: {len(strug)}, Unscored: {len(unscored)}')
+            # print(f'[INFO] Assigning students from school: {school}')
+            # print(f'  Top: {len(top)}, Average: {len(avg)}, Struggling: {len(strug)}, Unscored: {len(unscored)}')
 
             # Assign students per category
             for category_name, category in zip(
@@ -97,12 +98,14 @@ class SectionAssigner:
 
 
     def calculate_statistics(self):
+        print(self.school_groups.items())
         total_students = len(self.students)
         male_count = sum(1 for s in self.students if s.get('sex').lower() == 'm')
         female_count = total_students - male_count
         male_ratio = round(100 * male_count / total_students, 2) if total_students else 0
         female_ratio = round(100 * female_count / total_students, 2) if total_students else 0
-
+        
+        
         stats = {
             "total_students": total_students,
             "total_sections": self.num_sections,
@@ -114,13 +117,15 @@ class SectionAssigner:
             },
             "school_counts": {
                 school: {
-                    'count': len(total_students),
+                    'count': len(students), 
                     'ratio': round((len(students) / total_students) * 100, 2) if total_students else 0
                 }
-                for school, students in self.school_groups.items()
+                for school, students in self.school_groups.items() 
             },
             "sections": {}
         }
+        
+        
 
         alphabet = string.ascii_uppercase
         for i, sec in enumerate(self.sections):
@@ -161,8 +166,7 @@ class SectionAssigner:
         self.group_by_school()
         self.assign_students()
         stats = self.calculate_statistics()
-        return self.sections, stats
-
+        return self.sections, self.stats
 
 
 def assign_and_save(model,num_section,students):

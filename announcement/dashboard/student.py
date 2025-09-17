@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .student import *
-from .announcement import *
-from .dashboardview import *
+from django.views.generic import TemplateView,ListView,CreateView,UpdateView,DeleteView
+from django.urls import reverse_lazy
 
-__all__ = ['DashboardStudentListView', 'StudentCreateView', 'StudentUpdateView', 'StudentDeleteView',
-           'DashboardAnnouncementListView', 'AnnouncementCreateView', 'AnnouncementUpdateView', 'AnnouncementDeleteView']
+from announcement.models import Student,Parent,AcademicYear,Section
+from announcement.forms import *
+
+

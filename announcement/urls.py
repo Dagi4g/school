@@ -1,7 +1,7 @@
 from django.urls import path
 from django.conf.urls.static import static
 from django.conf import settings
-from .dashboard import dashboardview
+from .dashboard import dashboardview,student,announcement
 from . import views
 
 app_name = 'chencha'
@@ -17,11 +17,12 @@ user_urls = [
 
 dashboard_urls = [
     path ("dashboard/", dashboardview.DashBoard.as_view(), name="dashboard"),
-    path("create_announcement/", dashboardview.AnnouncementCreateView.as_view(), name="create_announcement"),
-    path("show_announcement/", dashboardview.DashboardAnnouncementListView.as_view(template_name='dashboard/announcements/show_announcement.html'), name="show_announcement"),
-    path("update_announcement/<int:pk>/", dashboardview.AnnouncementUpdateView.as_view(), name="update_announcement"),
-    path("announcement_detail/<int:pk>/", dashboardview.AnnouncementDetailView.as_view(), name="announcement_detail"),
-    path("delete_announcement/<int:pk>/", dashboardview.AnnouncementDeleteView.as_view(), name="delete_announcement"),    path('look_up/',views.SectionLookUpView.as_view(),name='lookup'),
+    path("create_announcement/", announcement.AnnouncementCreateView.as_view(), name="create_announcement"),
+    path("show_announcement/", announcement.DashboardAnnouncementListView.as_view(template_name='dashboard/announcements/show_announcement.html'), name="show_announcement"),
+    path("update_announcement/<int:pk>/", announcement.AnnouncementUpdateView.as_view(), name="update_announcement"),
+    path("announcement_detail/<int:pk>/", announcement.AnnouncementDetailView.as_view(), name="announcement_detail"),
+    path("delete_announcement/<int:pk>/", announcement.AnnouncementDeleteView.as_view(), name="delete_announcement"),
+    path('look_up/',views.SectionLookUpView.as_view(),name='lookup'),
 
 ]
 

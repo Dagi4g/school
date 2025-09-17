@@ -85,7 +85,7 @@ def save_students_to_csv(docx_path, output_folder="."):
 if __name__ == "__main__":
     import sys 
     if len(sys.argv) != 2:
-        print("Usage: python import_marks.py <path_to_word_document>")
+        print("Usage: python word_auto.py <path_to_word_document>")
         sys.exit(1)
     
     doc_path = sys.argv[1]

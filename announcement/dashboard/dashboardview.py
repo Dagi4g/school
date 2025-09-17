@@ -31,36 +31,6 @@ class DashBoard(LoginRequiredMixin, TemplateView):
     template_name = 'dashboard/home.html'
     
 
-'''announcement management view'''
-
-class AnnouncementCreateView(LoginRequiredMixin, CreateView):
-    model = Announcement
-    form_class = AnnouncementManagementForm
-    template_name = 'dashboard/announcements/create_announcement.html'
-    success_url = '/show_announcement/'
-
-class DashboardAnnouncementListView(LoginRequiredMixin, ListView):
-    model = Announcement
-    template_name = 'dashboard/announcements/show_announcement.html'
-    context_object_name = 'announcements'
-
-class AnnouncementDetailView(LoginRequiredMixin, DetailView):
-    model = Announcement
-    template_name = 'dashboard/announcements/announcement_detail.html'
-    context_object_name = 'announcement'
-
-
-class AnnouncementUpdateView(LoginRequiredMixin, UpdateView):
-    model = Announcement
-    form_class = AnnouncementManagementForm
-    template_name = 'dashboard/announcements/update_announcement.html'
-    success_url = '/show_announcement/'
-
-class AnnouncementDeleteView(LoginRequiredMixin, DeleteView):
-    model = Announcement
-    template_name = 'dashboard/announcements/confirm_announcement_deletion.html'
-    success_url = '/show_announcement/'
-
 '''student management view'''
 """ this code is fore dashbard student managment but it will be used withe digital is system """
 class GeneralStudentListView(LoginRequiredMixin, ListView):
@@ -293,7 +263,6 @@ class SectionAssignerView(FormView, LoginRequiredMixin):
     def form_valid(self, form):
         section_number = form.cleaned_data["section_number"]
         student_data = self.request.session.get('students_nosection', [])        
-        print(student_data)
         try:
             assign_and_save(model=AutoSectionGrade,num_section=section_number, students=student_data)
             from ..models import AutoGradeStat
@@ -339,5 +308,5 @@ def download_mark_list(request):
         buffer.getvalue(),
         content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     )
-    response['Content-Disposition'] = 'attachment; filename="grade 9 marklist.docx"'
+    response['Content-Disposition'] = 'attachment; filename="2018 grade 9 marklist.docx"'
     return response

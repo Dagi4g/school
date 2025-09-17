@@ -3,21 +3,81 @@ from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 from datetime import timedelta
+from django.db import models
+from django.utils import timezone
+from django.core.exceptions import ValidationError
+
+# -----------------------
+# File Validators
+# -----------------------
+
+def validate_file_size(value, max_size_mb=10):
+    if value.size > max_size_mb * 1024 * 1024:
+        raise ValidationError(f"File size must not exceed {max_size_mb} MB.")
+
+def validate_image_type(value):
+    valid_types = ["image/jpeg", "image/png", "image/gif"]
+    if value.file.content_type not in valid_types:
+        raise ValidationError("Unsupported image type. Use JPEG, PNG, or GIF.")
+
+def validate_video_type(value):
+    valid_types = ["video/mp4", "video/quicktime"]
+    if value.file.content_type not in valid_types:
+        raise ValidationError("Unsupported video type. Use MP4 or MOV.")
+
+def validate_audio_type(value):
+    valid_types = ["audio/mpeg", "audio/mp3", "audio/wav"]
+    if value.file.content_type not in valid_types:
+        raise ValidationError("Unsupported audio type. Use MP3 or WAV.")
+
+
+# -----------------------
+# Custom QuerySet & Manager
+# -----------------------
+
+class AnnouncementQuerySet(models.QuerySet):
+    def active(self):
+        """Return only announcements that have not expired."""
+        return self.filter(expires_at__gt=timezone.now())
+
+
+class AnnouncementManager(models.Manager.from_queryset(AnnouncementQuerySet)):
+    pass
+
+# -----------------------
+# Model
+# -----------------------
 
 class Announcement(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
-    created_at = models.DateTimeField(default=timezone.now())
-    expires_at = models.DateTimeField(default=timezone.now())
-    image = models.ImageField(upload_to='announcements/images', blank=True, null=True)
-    video = models.FileField(upload_to='announcements/videos/', blank=True, null=True)
-    audio = models.FileField(upload_to='announcements/audios/', blank=True, null=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    expires_at = models.DateTimeField(db_index=True)
+
+    image = models.ImageField(
+        upload_to='announcements/images/',
+        blank=True, null=True,
+        validators=[validate_file_size, validate_image_type]
+    )
+    video = models.FileField(
+        upload_to='announcements/videos/',
+        blank=True, null=True,
+        validators=[validate_file_size, validate_video_type]
+    )
+    audio = models.FileField(
+        upload_to='announcements/audios/',
+        blank=True, null=True,
+        validators=[validate_file_size, validate_audio_type]
+    )
+    
+    objects = AnnouncementManager()
+    
+    class Meta:
+        verbose_name_plural = "Announcements"
+        ordering = ["-created_at"]
 
     def __str__(self):
         return self.title
-    
-    def __repr__(self):
-        return super().__repr__()
 
 class Parent(models.Model):
     name = models.CharField(max_length=255)

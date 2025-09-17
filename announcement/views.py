@@ -37,7 +37,6 @@ def show_sections(request):
     section_dict = {}
     for s in sections:
         section_dict.setdefault(s['section'], []).append(s)
-    print(stats)
         
     return render(request, 'autograde/sections.html', {'section_dict': section_dict,'stats': stats})
     

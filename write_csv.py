@@ -42,7 +42,7 @@ def write_to_db(file_path,):
             father_name=father_name.title(),
             grandfather_name=grandfather_name.title(),
             sex=sex.title(),
-            age=age,
+            age=age if age.isdigit() else 15,
             previous_school=school_name.title(),
             grade=grade.title()
         )
